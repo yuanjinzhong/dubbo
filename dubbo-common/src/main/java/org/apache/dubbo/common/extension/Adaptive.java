@@ -53,6 +53,10 @@ public @interface Adaptive {
      * dot '.', for example, for {@code org.apache.dubbo.xxx.YyyInvokerWrapper}, the generated name is
      * <code>String[] {"yyy.invoker.wrapper"}</code>.
      *
+     * <p>
+     * 这个属性是搭配URL来使用的，属性值作为key,然后去URl里面取值，这个key可以自定义，
+     * 如果没有自定义则默认为{"yyy.invoker.wrapper"}，也就是说URl里面的key为{"yyy.invoker.wrapper"}
+     *
      * @return parameter names in URL
      */
     String[] value() default {};

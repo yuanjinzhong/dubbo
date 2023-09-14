@@ -56,6 +56,11 @@ class ExtensionLoader_Adaptive_Test {
     @Test
     void test_getAdaptiveExtension_defaultAdaptiveKey() throws Exception {
         {
+
+            ExtensionLoader<SimpleExt> extensionLoader = ExtensionLoader.getExtensionLoader(SimpleExt.class);
+            SimpleExt defaultExtension = extensionLoader.getDefaultExtension();
+            assertEquals("Ext1Impl1-echo",defaultExtension.echo(null,null));
+
             SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getAdaptiveExtension();
 
             Map<String, String> map = new HashMap<String, String>();

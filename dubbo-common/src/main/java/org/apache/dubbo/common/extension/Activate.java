@@ -24,7 +24,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+
 /**
+ * yjz
+ * <p>扩展点实现类上，不加该注解则无条件激活扩展； 加了该条件则类似spring的condition,条件判断是否激活
+ * <p>
+ * 详细看
+ * <p>
+ *  org.apache.dubbo.common.extension.ExtensionLoader#loadClassIfActive(ClassLoader, Class)
+ * <p>
+ *
  * Activate. This annotation is useful for automatically activate certain extensions with the given criteria,
  * for examples: <code>@Activate</code> can be used to load certain <code>Filter</code> extension when there are
  * multiple implementations.
@@ -92,6 +101,11 @@ public @interface Activate {
      */
     int order() default 0;
 
+    /**
+     * todo onclass属性配置的类存在，在激活该扩展点， 类似spring的condition yjz
+     *
+     * @see  ExtensionLoader#loadClassIfActive(ClassLoader, Class)
+     */
     /**
      * Activate loadClass when the current extension when the specified className all match
      * @return className names to all match

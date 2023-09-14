@@ -17,6 +17,7 @@
 package org.apache.dubbo.common.extension;
 
 import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.compiler.Compiler;
 import org.apache.dubbo.common.convert.Converter;
 import org.apache.dubbo.common.convert.StringToBooleanConverter;
 import org.apache.dubbo.common.convert.StringToDoubleConverter;
@@ -773,6 +774,11 @@ class ExtensionLoaderTest {
 
     @Test
     void testLoadByDubboInternalSPI() {
+    /*    找不到， Compiler 是源码目录的？？？所以找不到
+        ExtensionLoader<Compiler> extensionLoader0 = getExtensionLoader(Compiler.class);
+        Compiler adaptive = extensionLoader0.getExtension("adaptive", true);
+        assertNotNull(adaptive);*/
+
         ExtensionLoader<SPI1> extensionLoader = getExtensionLoader(SPI1.class);
         SPI1 spi1 = extensionLoader.getExtension("1", true);
         assertNotNull(spi1);

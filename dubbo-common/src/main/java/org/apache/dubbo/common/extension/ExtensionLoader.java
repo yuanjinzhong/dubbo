@@ -575,6 +575,7 @@ public class ExtensionLoader<T> {
             synchronized (holder) {
                 instance = holder.get();
                 if (instance == null) {
+                    //todo 框架扩展点实例 yjz
                     instance = createExtension(name, wrap);
                     holder.set(instance);
                 }
@@ -784,20 +785,28 @@ public class ExtensionLoader<T> {
 
     @SuppressWarnings("unchecked")
     private T createExtension(String name, boolean wrap) {
+        //todo 拿扩展类，yjz
         Class<?> clazz = getExtensionClasses().get(name);
+        //todo 如果没有该接口的扩展，或者该接口的实现类不允许重复但实际上重复了，直接抛出异常 yjz
         if (clazz == null || unacceptableExceptions.contains(name)) {
             throw findException(name);
         }
         try {
+            //todo  获取扩展点实例 yjz
             T instance = (T) extensionInstances.get(clazz);
             if (instance == null) {
                 extensionInstances.putIfAbsent(clazz, createExtensionInstance(clazz));
                 instance = (T) extensionInstances.get(clazz);
                 instance = postProcessBeforeInitialization(instance, name);
+                // todo 依赖注入扩展点内部的属性(调用setter方法) yjz
                 injectExtension(instance);
                 instance = postProcessAfterInitialization(instance, name);
             }
-
+            /** todo  AOP 功能，（原有扩展点的包装类）yjz
+             *  如果启用包装的话，则自动为进行包装.
+             *  比如我基于 Protocol 定义了 DubboProtocol 的扩展，但实际上在 Dubbo 中不是直接使用的 DubboProtocol, 而是其包装类
+             *  ProtocolListenerWrapper
+             */
             if (wrap) {
                 List<Class<?>> wrapperClassesList = new ArrayList<>();
                 if (cachedWrapperClasses != null) {
@@ -896,6 +905,7 @@ public class ExtensionLoader<T> {
                 }
 
                 try {
+                    //todo 扩展点的依赖注入， 调用扩展点的setter方法， yjz
                     String property = getSetterProperty(method);
                     Object object = injector.getInstance(pt, property);
                     if (object != null) {
@@ -963,6 +973,7 @@ public class ExtensionLoader<T> {
                 classes = cachedClasses.get();
                 if (classes == null) {
                     try {
+                        //todo 获取扩展点实例 yjz
                         classes = loadExtensionClasses();
                     } catch (InterruptedException e) {
                         logger.error(COMMON_ERROR_LOAD_EXTENSION, "", "",
@@ -989,10 +1000,14 @@ public class ExtensionLoader<T> {
 
         Map<String, Class<?>> extensionClasses = new HashMap<>();
 
+        // strategies 用java的spi获取 "寻找扩展点的策略"
+        //todo 到多个目录里面找扩展点的 k v yjz
+        // 基于策略来加载指定文件夹下的文件
+        // 目前有四种策略，分别读取 META-INF/services/ META-INF/dubbo/ META-INF/dubbo/internal/ META-INF/dubbo/external/ 这四个目录下的配置文件
         for (LoadingStrategy strategy : strategies) {
             loadDirectory(extensionClasses, strategy, type.getName());
 
-            // compatible with old ExtensionFactory
+            // compatible with old ExtensionFactory todo 扩展点层面的依赖注入？？？ yjz
             if (this.type == ExtensionInjector.class) {
                 loadDirectory(extensionClasses, strategy, ExtensionFactory.class.getName());
             }
@@ -1043,6 +1058,7 @@ public class ExtensionLoader<T> {
     private void loadDirectoryInternal(Map<String, Class<?>> extensionClasses,
                                        LoadingStrategy loadingStrategy, String type)
         throws InterruptedException {
+       // todo fileName = 文件夹路径 + type 全限定名  yjz
         String fileName = loadingStrategy.directory() + type;
         try {
             List<ClassLoader> classLoadersToLoad = new LinkedList<>();
@@ -1122,6 +1138,7 @@ public class ExtensionLoader<T> {
             for (String line : newContentList) {
                 try {
                     String name = null;
+                    // todo 以等于号 = 为界，截取键与值
                     int i = line.indexOf('=');
                     if (i > 0) {
                         name = line.substring(0, i).trim();
@@ -1133,7 +1150,7 @@ public class ExtensionLoader<T> {
                         excludedPackages) && isIncluded(clazz,
                         includedPackages) && !isExcludedByClassLoader(clazz, classLoader,
                         onlyExtensionClassLoaderPackages)) {
-
+                        // todo 加载类，并通过 loadClass 方法对类进行缓存
                         loadClass(classLoader, extensionClasses, resourceURL,
                             Class.forName(clazz, true, classLoader), name, overridden);
                     }
@@ -1232,7 +1249,7 @@ public class ExtensionLoader<T> {
             throw new IllegalStateException(
                 "Error occurred when loading extension class (interface: " + type + ", class line: " + clazz.getName() + "), class " + clazz.getName() + " is not subtype of interface.");
         }
-
+        //todo 条件判断是否激活扩展点 yjz
         boolean isActive = loadClassIfActive(classLoader, clazz);
 
         if (!isActive) {
@@ -1263,6 +1280,12 @@ public class ExtensionLoader<T> {
         }
     }
 
+    /**
+     * todo 条件判断是否激活扩展点
+     * @param classLoader
+     * @param clazz
+     * @return
+     */
     private boolean loadClassIfActive(ClassLoader classLoader, Class<?> clazz) {
         Activate activate = clazz.getAnnotation(Activate.class);
 
@@ -1279,6 +1302,7 @@ public class ExtensionLoader<T> {
 
         boolean isActive = true;
 
+        //todo yjz 指定类存在才激活， 类似 spring 的 @condition注解
         if (null != onClass && onClass.length > 0) {
             isActive = Arrays.stream(onClass).filter(StringUtils::isNotBlank)
                 .allMatch(className -> ClassUtils.isPresent(className, classLoader));
