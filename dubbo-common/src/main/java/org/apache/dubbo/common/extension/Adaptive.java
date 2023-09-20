@@ -55,7 +55,8 @@ public @interface Adaptive {
      *
      * <p>
      * 这个属性是搭配URL来使用的，属性值作为key,然后去URl里面取值，这个key可以自定义，
-     * 如果没有自定义则默认为{"yyy.invoker.wrapper"}，也就是说URl里面的key为{"yyy.invoker.wrapper"}
+     * <p>如果没有自定义则默认为{"yyy.invoker.wrapper"}，也就是说URl里面的key为{"yyy.invoker.wrapper"}
+     * <p>注意上面的"yyy.invoker.wrapper"是从扩展点接口的驼峰形式转换而来
      *
      * @return parameter names in URL
      */

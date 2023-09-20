@@ -783,10 +783,25 @@ public class ExtensionLoader<T> {
         return new IllegalStateException(buf.toString());
     }
 
+    /**
+     * 1、先利用spi获取扩展点类
+     * 2、实例化扩展点
+     * 3、对扩展点依赖注入
+     * 4、根据wrap字段，决定是否使用包装类
+     * @param name
+     * @param wrap
+     * @return
+     */
     @SuppressWarnings("unchecked")
     private T createExtension(String name, boolean wrap) {
-        //todo 拿扩展类，yjz
+
+        /**
+         * todo
+         * 先拿到扩展点类对象
+         */
         Class<?> clazz = getExtensionClasses().get(name);
+
+
         //todo 如果没有该接口的扩展，或者该接口的实现类不允许重复但实际上重复了，直接抛出异常 yjz
         if (clazz == null || unacceptableExceptions.contains(name)) {
             throw findException(name);
@@ -806,6 +821,8 @@ public class ExtensionLoader<T> {
              *  如果启用包装的话，则自动为进行包装.
              *  比如我基于 Protocol 定义了 DubboProtocol 的扩展，但实际上在 Dubbo 中不是直接使用的 DubboProtocol, 而是其包装类
              *  ProtocolListenerWrapper
+             *
+             *  是否使用包装类，如果存在该类的包装类，则不返回该类的实例，返回该类的包装类
              */
             if (wrap) {
                 List<Class<?>> wrapperClassesList = new ArrayList<>();
@@ -822,6 +839,7 @@ public class ExtensionLoader<T> {
                             wrapper.matches()) || ArrayUtils.contains(wrapper.matches(),
                             name)) && !ArrayUtils.contains(wrapper.mismatches(), name));
                         if (match) {
+                            //todo 如果包装类匹配，返回包装类
                             instance = injectExtension(
                                 (T) wrapperClass.getConstructor(type).newInstance(instance));
                             instance = postProcessAfterInitialization(instance, name);
@@ -1134,7 +1152,7 @@ public class ExtensionLoader<T> {
                               String[] onlyExtensionClassLoaderPackages) {
         try {
             List<String> newContentList = getResourceContent(resourceURL);
-            String clazz;
+            String clazz; // 这个类路径是spi路径里面配置的，所以可能配置的是扩展点的包装类
             for (String line : newContentList) {
                 try {
                     String name = null;
@@ -1258,7 +1276,7 @@ public class ExtensionLoader<T> {
 
         if (clazz.isAnnotationPresent(Adaptive.class)) {
             cacheAdaptiveClass(clazz, overridden);
-        } else if (isWrapperClass(clazz)) {
+        } else if (isWrapperClass(clazz)) { // todo 这个类路径是spi路径里面配置的，所以可能配置的是扩展点的包装类 yjz
             cacheWrapperClass(clazz);
         } else {
             if (StringUtils.isEmpty(name)) {
@@ -1282,6 +1300,7 @@ public class ExtensionLoader<T> {
 
     /**
      * todo 条件判断是否激活扩展点
+     * <p>扩展点实现类上，不加该注解则无条件激活扩展； 加了该条件则类似spring的condition,条件判断是否激活
      * @param classLoader
      * @param clazz
      * @return
@@ -1388,6 +1407,9 @@ public class ExtensionLoader<T> {
     protected boolean isWrapperClass(Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getConstructors();
         for (Constructor<?> constructor : constructors) {
+            //todo 当前类的构造函数中，只有有一个构造函数符合如下条件，则认为该类是扩展类的包装类
+            //todo 1、构造函数只有一个参数
+            //todo 2、构造函数的这个参数类型为扩展点的类型
             if (constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == type) {
                 return true;
             }

@@ -26,6 +26,8 @@ import org.apache.dubbo.config.bootstrap.DubboBootstrap;
 import org.apache.dubbo.demo.DemoService;
 import org.apache.dubbo.rpc.service.GenericService;
 
+import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IGNORED_INTERFACE;
+
 public class Application {
 
     private static final String REGISTRY_URL = "zookeeper://127.0.0.1:2181";
@@ -33,7 +35,10 @@ public class Application {
 
 
     public static void main(String[] args) {
-            runWithBootstrap();
+
+        System.setProperty(DUBBO_NETWORK_IGNORED_INTERFACE,"en6,utun5,utun4,utun3,utun2,utun1,utun0,en2,en1,en3,en4,llw0,bridge0,awdl0,ap1,en8,stf0,gif0");
+
+        runWithBootstrap();
     }
 
     private static void runWithBootstrap() {

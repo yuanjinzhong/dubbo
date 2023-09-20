@@ -121,6 +121,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
      * <p>
      * Actually，when the {@link ExtensionLoader} init the {@link Protocol} instants,it will automatically wrap three
      * layers, and eventually will get a <b>ProtocolSerializationWrapper</b> or <b>ProtocolFilterWrapper</b> or <b>ProtocolListenerWrapper</b>
+     * <p>依据URL来决定使用什么协议？？？？
      */
     private Protocol protocolSPI;
 
