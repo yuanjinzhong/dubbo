@@ -37,6 +37,9 @@ import static org.apache.dubbo.common.constants.LoggerCodeConstants.CONFIG_FAILE
  * This is a singleton in order to ensure there is only one shutdown hook registered.
  * Because {@link ApplicationShutdownHooks} use {@link java.util.IdentityHashMap}
  * to store the shutdown hooks.
+ *
+ * 因为IdentityHashMap key可以==相等，也就是key可以重复 （内存地址判断相等），所以需要设置这个hook为单例
+ *
  */
 public class DubboShutdownHook extends Thread {
 

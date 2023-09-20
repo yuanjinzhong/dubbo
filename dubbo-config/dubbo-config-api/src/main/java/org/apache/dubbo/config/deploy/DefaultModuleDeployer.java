@@ -435,6 +435,7 @@ public class DefaultModuleDeployer extends AbstractDeployer<ModuleModel> impleme
             asyncExportingFutures.add(future);
         } else {
             if (!sc.isExported()) {
+                //todo yjz 服务暴露
                 sc.export(RegisterTypeEnum.AUTO_REGISTER_BY_DEPLOYER);
                 exportedServices.add(sc);
             }

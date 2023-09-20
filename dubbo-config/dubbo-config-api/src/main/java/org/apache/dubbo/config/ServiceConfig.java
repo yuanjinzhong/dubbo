@@ -751,6 +751,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
             // export to local if the config is not remote (export to remote only when config is remote)
             if (!SCOPE_REMOTE.equalsIgnoreCase(scope)) {
+                /**
+                 * 本地暴露、注册
+                 */
                 exportLocal(url);
             }
 
@@ -762,6 +765,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
                 if (StringUtils.isNotBlank(extProtocol)) {
                     // export original url
+                    /**
+                     * 暴露服务的时候也用到URl
+                     */
                     url = URLBuilder.from(url).
                         addParameter(IS_PU_SERVER_KEY, Boolean.TRUE.toString()).
                         removeParameter("ext.protocol").
@@ -795,6 +801,13 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         this.urls.add(url);
     }
 
+    /**
+     * todo 远程暴露 yjz
+     * @param url
+     * @param registryURLs
+     * @param registerType
+     * @return
+     */
     private URL exportRemote(URL url, List<URL> registryURLs, RegisterTypeEnum registerType) {
         if (CollectionUtils.isNotEmpty(registryURLs) && registerType != RegisterTypeEnum.NEVER_REGISTER) {
             for (URL registryURL : registryURLs) {
@@ -853,7 +866,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             registerType == RegisterTypeEnum.AUTO_REGISTER_BY_DEPLOYER) {
             url = url.addParameter(REGISTER_KEY, false);
         }
-
+        /**
+         * 最核型的地方， 暴露服务最核心的地方
+         */
         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
         if (withMetaData) {
             invoker = new DelegateProviderMetaDataInvoker(invoker, this);
@@ -864,9 +879,13 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
 
     /**
+     * todo yjz 本地暴露  常用于两个服务直接链接
+     */
+    /**
      * always export injvm
      */
     private void exportLocal(URL url) {
+        // todo 这里能看出来 URL类是多么的重要， 但是这个URL 居然不是jdk的URl
         URL local = URLBuilder.from(url)
             .setProtocol(LOCAL_PROTOCOL)
             .setHost(LOCALHOST_VALUE)
