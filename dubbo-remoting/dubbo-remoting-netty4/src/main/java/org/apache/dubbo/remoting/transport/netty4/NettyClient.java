@@ -16,6 +16,8 @@
  */
 package org.apache.dubbo.remoting.transport.netty4;
 
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.Version;
 import org.apache.dubbo.common.config.ConfigurationUtils;
@@ -131,7 +133,12 @@ public class NettyClient extends AbstractClient {
                     ch.pipeline().addLast("negotiation", new SslClientTlsHandler(sslContext));
                 }
 
+                /***这边的channelHandle全是可以共享的*/
+                LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
+                /***入栈&出栈日志记录*/
+                ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
                 ch.pipeline()//.addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug
                     .addLast("decoder", adapter.getDecoder())
                     .addLast("encoder", adapter.getEncoder())

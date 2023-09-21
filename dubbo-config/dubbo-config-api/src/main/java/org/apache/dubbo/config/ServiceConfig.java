@@ -867,7 +867,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             url = url.addParameter(REGISTER_KEY, false);
         }
         /**
-         * 最核型的地方， 暴露服务最核心的地方
+         * 最核心的地方， 暴露服务最核心的地方
          */
         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
         if (withMetaData) {

@@ -16,6 +16,8 @@
  */
 package org.apache.dubbo.remoting.transport.netty4;
 
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.config.ConfigurationUtils;
 import org.apache.dubbo.common.logger.ErrorTypeAwareLogger;
@@ -131,6 +133,8 @@ public class NettyServer extends AbstractServer {
 
     protected void initServerBootstrap(NettyServerHandler nettyServerHandler) {
         boolean keepalive = getUrl().getParameter(KEEP_ALIVE_KEY, Boolean.FALSE);
+        /***这边的channelHandle全是可以共享的*/
+        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
         bootstrap.group(bossGroup, workerGroup)
             .channel(NettyEventLoopFactory.serverSocketChannelClass())
             .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
@@ -143,6 +147,8 @@ public class NettyServer extends AbstractServer {
                     int closeTimeout = UrlUtils.getCloseTimeout(getUrl());
                     NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyServer.this);
                     ch.pipeline().addLast("negotiation", new SslServerTlsHandler(getUrl()));
+                    /***入栈&出栈日志记录*/
+                    ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
                     ch.pipeline()
                         .addLast("decoder", adapter.getDecoder())
                         .addLast("encoder", adapter.getEncoder())
