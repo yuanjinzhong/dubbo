@@ -39,7 +39,7 @@ public @interface Adaptive {
      * in the URL, and the parameter names are given by this method.
      * <p>
      * If the specified parameters are not found from {@link URL}, then the default extension will be used for
-     * dependency injection (specified in its interface's {@link SPI}).
+     * dependency injection (specified in its interface's {@link SPI}). 取@SPI注解的value作为默认扩展点
      * <p>
      * For example, given <code>String[] {"key1", "key2"}</code>:
      * <ol>
@@ -55,8 +55,11 @@ public @interface Adaptive {
      *
      * <p>
      * 这个属性是搭配URL来使用的，属性值作为key,然后去URl里面取值，这个key可以自定义，
-     * <p>如果没有自定义则默认为{"yyy.invoker.wrapper"}，也就是说URl里面的key为{"yyy.invoker.wrapper"}
+     * <p>如果key没有自定义 则key 默认为{"yyy.invoker.wrapper"}，也就是说URl里面的key为{"yyy.invoker.wrapper"}
      * <p>注意上面的"yyy.invoker.wrapper"是从扩展点接口的驼峰形式转换而来
+     *
+     *  value 值 动态生成的代码里面是这样
+     *    String extName = url.getParameter("proxy", "javassist"); // 取的@SPI注解的默认值
      *
      * @return parameter names in URL
      */

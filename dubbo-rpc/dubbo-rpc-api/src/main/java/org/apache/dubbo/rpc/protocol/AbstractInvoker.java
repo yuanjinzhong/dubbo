@@ -178,6 +178,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
             logger.warn(PROTOCOL_FAILED_REQUEST, "", "", "Invoker for service " + this + " on consumer " + NetUtils.getLocalHost() + " is destroyed, " + ", dubbo version is " + Version.getVersion() + ", this invoker should not be used any longer");
         }
 
+        //todo  就是 RpcRequestMessage
         RpcInvocation invocation = (RpcInvocation) inv;
 
         // prepare rpc invocation
@@ -197,10 +198,12 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
         addInvocationAttachments(inv);
 
+        //todo 同步异步设置
         inv.setInvokeMode(RpcUtils.getInvokeMode(url, inv));
 
         RpcUtils.attachInvocationIdIfAsync(getUrl(), inv);
 
+        //todo 猜测，异步场景中用来管理 client  和server 端
         attachInvocationSerializationId(inv);
     }
 

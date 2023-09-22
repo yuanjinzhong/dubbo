@@ -229,7 +229,7 @@ public interface CommonConstants {
 
     String VERSION_KEY = "version";
 
-    String REVISION_KEY = "revision";
+    String REVISION_KEY = "revision";//todo 修订版本
 
     String METADATA_KEY = "metadata-type";
 

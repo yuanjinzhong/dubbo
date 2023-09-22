@@ -6,7 +6,13 @@ import javassist.*;
  * javaasist动态生成类
  */
 public class DynamicClassGenerator {
-    public static void main(String[] args) throws Exception {
+
+    /**
+     * 不能有两个main 方法， Application 里面也有个main
+     * @param args
+     * @throws Exception
+     */
+    public static void main2(String[] args) throws Exception {
         // 创建ClassPool对象，用于管理生成的类
         ClassPool pool = ClassPool.getDefault();
 
