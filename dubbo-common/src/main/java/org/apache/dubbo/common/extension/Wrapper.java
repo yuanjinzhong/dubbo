@@ -20,6 +20,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ *  <p>dubbo 的 spi 中，判断当前"扩展实现类"是否是 "扩展接口的包装实现类" 不是通过 @Wrapper接口来的
+ *  <p>而是通过 反射判断"该包装实现类是否包含 仅有一个扩展接口作为参数的构造函数"来判断的
+ *
+ *  <p>@Wrapper注解是在 知道了一堆扩展实现类之后，控制组装（构造）包装类实现类的策略（通过 matches，mismatches 来看是否匹配ExtentionLoader查找的spi的名字）
+ *
+ *
+ *  <p>构造包装类的时候可以无限套娃： 包装类A--持有--包装类B--持有--包装类C---持有--扩展点默认接口
+ *  <p>                          DemoWrapper1-> DemoWrapper2->DemoImpl
+ *
+ *
+ *
  * The annotated class will only work as a wrapper when the condition matches.
  */
 @Retention(RetentionPolicy.RUNTIME)

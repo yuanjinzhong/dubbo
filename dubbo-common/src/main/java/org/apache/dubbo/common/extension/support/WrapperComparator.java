@@ -22,6 +22,8 @@ import org.apache.dubbo.common.extension.Wrapper;
 import java.util.Comparator;
 
 /**
+ *  todo yjz  扩展点接口的包装实现类存在多个，需要一个"优先级筛选机制"
+ *
  * OrderComparator
  * Derived from {@link ActivateComparator}
  */
@@ -53,9 +55,21 @@ public class WrapperComparator implements Comparator<Object> {
         int n1 = a1.order;
         int n2 = a2.order;
         // never return 0 even if n1 equals n2, otherwise, o1 and o2 will override each other in collection like HashSet
-        return n1 > n2 ? 1 : -1;
+        return n1 > n2 ? 1 : -1; // 升序比较器
     }
 
+    /**
+     * <p> todo yjz  取三个注解的 order属性， 且三个注解的优先级 从高到低， wrapper最低
+     *
+     * <p>todo yjz  获取order属性是为了，上面的compare比较，
+     *
+     * <p>todo yjz  猜测使用场景是，一个扩展点接口有多个包装实现类（@wrapper修饰的时候） 需要一个"优先级筛选机制"
+     *
+     * <p>todo yjz  目前这个机制就是：  按一定优先级取三个注解的优先级字段（order）,取出来排序
+     *
+     * @param clazz
+     * @return
+     */
     @SuppressWarnings("deprecation")
     private OrderInfo parseOrder(Class<?> clazz) {
         OrderInfo info = new OrderInfo();

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 
 /**
  * yjz
- * <p>扩展点实现类上，不加该注解则无条件激活扩展； 加了该条件则类似spring的condition,条件判断是否激活
+ * <p> todo 扩展点实现类上，不加该注解则无条件激活扩展； 加了该条件则类似spring的condition,条件判断是否激活
  * <p>
  * 详细看
  * <p>

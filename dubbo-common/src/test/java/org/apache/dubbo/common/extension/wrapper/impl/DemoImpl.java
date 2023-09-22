@@ -21,6 +21,7 @@ import org.apache.dubbo.common.extension.wrapper.Demo;
 public class DemoImpl implements Demo {
     @Override
     public String echo(String msg) {
+        System.out.println("我是默认扩展的包装逻辑");
         return msg;
     }
 

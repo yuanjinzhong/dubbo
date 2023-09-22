@@ -797,7 +797,7 @@ public class ExtensionLoader<T> {
 
         /**
          * todo
-         * 先拿到扩展点类对象
+         * 先拿到扩展点实现类 class对象
          */
         Class<?> clazz = getExtensionClasses().get(name);
 
@@ -810,7 +810,7 @@ public class ExtensionLoader<T> {
             //todo  获取扩展点实例 yjz
             T instance = (T) extensionInstances.get(clazz);
             if (instance == null) {
-                extensionInstances.putIfAbsent(clazz, createExtensionInstance(clazz));
+                extensionInstances.putIfAbsent(clazz, createExtensionInstance(clazz));//todo 构造函数实例化扩展点实现类
                 instance = (T) extensionInstances.get(clazz);
                 instance = postProcessBeforeInitialization(instance, name);
                 // todo 依赖注入扩展点内部的属性(调用setter方法) yjz
@@ -826,23 +826,24 @@ public class ExtensionLoader<T> {
              */
             if (wrap) {
                 List<Class<?>> wrapperClassesList = new ArrayList<>();
+                //todo yjz  如果当前扩展点接口有包装实现类（@Wrapper修饰），则此时缓存里面已经有了（包含包装实现类了）//含有一个以扩展点接口为参数的Constructor，则认为是WrapperClass
                 if (cachedWrapperClasses != null) {
                     wrapperClassesList.addAll(cachedWrapperClasses);
-                    wrapperClassesList.sort(WrapperComparator.COMPARATOR);
-                    Collections.reverse(wrapperClassesList);
+                    wrapperClassesList.sort(WrapperComparator.COMPARATOR); //todo 这里是升序排序，（取决于比较器的实现：返回负数，则表示第一个元素应该排在前面，即升序排序；如果返回正数，则表示第二个元素应该排在前面，即降序排序）
+                    Collections.reverse(wrapperClassesList);//todo  再reverse一下，降序排序， 优先级最高的在第一位
                 }
 
                 if (CollectionUtils.isNotEmpty(wrapperClassesList)) {
                     for (Class<?> wrapperClass : wrapperClassesList) {
                         Wrapper wrapper = wrapperClass.getAnnotation(Wrapper.class);
-                        boolean match = (wrapper == null) || ((ArrayUtils.isEmpty(
+                        boolean match = (wrapper == null) || ((ArrayUtils.isEmpty(// 没wrapper注解 或者有wrapper注解，且match和mismatches也满足
                             wrapper.matches()) || ArrayUtils.contains(wrapper.matches(),
                             name)) && !ArrayUtils.contains(wrapper.mismatches(), name));
-                        if (match) {
-                            //todo 如果包装类匹配，返回包装类
+                        if (match) {//todo 如果包装类匹配，返回包装类
                             instance = injectExtension(
-                                (T) wrapperClass.getConstructor(type).newInstance(instance));
+                                (T) wrapperClass.getConstructor(type).newInstance(instance));//todo  如果存在多个包装类，则会多个包装类套娃，生成一个包包包装类的instance
                             instance = postProcessAfterInitialization(instance, name);
+                            //得到一个套娃的Wrapper实例 DemoWrapper1-> DemoWrapper2->DemoImpl  （箭头表示持有、引用）
                         }
                     }
                 }
@@ -889,6 +890,11 @@ public class ExtensionLoader<T> {
         return getExtensionClasses().containsKey(name);
     }
 
+    /**
+     * todo yjz  简简单单的setter
+     * @param instance
+     * @return
+     */
     private T injectExtension(T instance) {
         if (injector == null) {
             return instance;
@@ -902,7 +908,7 @@ public class ExtensionLoader<T> {
                 /**
                  * Check {@link DisableInject} to see if we need auto-injection for this property
                  */
-                if (method.isAnnotationPresent(DisableInject.class)) {
+                if (method.isAnnotationPresent(DisableInject.class)) { //todo 开发者手动禁止了依赖注入
                     continue;
                 }
 
@@ -1277,7 +1283,7 @@ public class ExtensionLoader<T> {
         if (clazz.isAnnotationPresent(Adaptive.class)) {
             cacheAdaptiveClass(clazz, overridden);
         } else if (isWrapperClass(clazz)) { // todo 这个类路径是spi路径里面配置的，所以可能配置的是扩展点的包装类 yjz
-            cacheWrapperClass(clazz);
+            cacheWrapperClass(clazz);//todo 如果配置的类是包装类，则不会继续执行，不会添加到extensionClasse里面
         } else {
             if (StringUtils.isEmpty(name)) {
                 name = findAnnotationName(clazz);

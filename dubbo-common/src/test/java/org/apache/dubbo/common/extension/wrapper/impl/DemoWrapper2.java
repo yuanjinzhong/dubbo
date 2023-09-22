@@ -28,6 +28,7 @@ public class DemoWrapper2 implements Demo {
     }
 
     public String echo(String msg) {
+        System.out.println("我是DemoWrapper2的包装逻辑");
         return demo.echo(msg);
     }
 }
