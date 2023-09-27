@@ -69,6 +69,9 @@ public interface DubboBeanUtils {
         registerInfrastructureBean(registry, ReferenceBeanManager.BEAN_NAME, ReferenceBeanManager.class);
 
         // Since 2.5.7 Register @Reference Annotation Bean Processor as an infrastructure Bean
+        /**
+         *  codex 注册ReferenceAnnotationBeanPostProcessor， 不是通过spring Boot的自动注入（{@link ServiceAnnotationPostProcessor} 是通过DubboAutoConfiguration 自动注入的）
+         */
         registerInfrastructureBean(registry, ReferenceAnnotationBeanPostProcessor.BEAN_NAME,
             ReferenceAnnotationBeanPostProcessor.class);
 
@@ -78,6 +81,10 @@ public interface DubboBeanUtils {
             DubboConfigAliasPostProcessor.class);
 
         // register ApplicationListeners
+        /**
+         * codex 注册事件监听的beanDefinition，在AbstractApplicationContext.registerListeners中，从beanFactory里面获取事件监听，并且绑定到ApplicationEventMulticaster上
+         * 这样事件监听初始化完成
+         */
         registerInfrastructureBean(registry, DubboDeployApplicationListener.class.getName(), DubboDeployApplicationListener.class);
         registerInfrastructureBean(registry, DubboConfigApplicationListener.class.getName(), DubboConfigApplicationListener.class);
 

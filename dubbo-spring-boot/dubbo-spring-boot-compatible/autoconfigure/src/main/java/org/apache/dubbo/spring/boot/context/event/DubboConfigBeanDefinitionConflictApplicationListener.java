@@ -41,6 +41,13 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTyp
 import static org.springframework.context.ConfigurableApplicationContext.ENVIRONMENT_BEAN_NAME;
 
 /**
+ * 在自动配置类中 采用 @bean 的方式配置，
+ *
+ * DubboDeployApplicationListener.class
+ * DubboConfigApplicationListener.class
+ *
+ * 这两个事件监听则是通过 .DubboBeanUtils#registerInfrastructureBean() 方法，注册beanDefinition的方式配置
+ *
  * The {@link ApplicationListener} class for Dubbo Config {@link BeanDefinition Bean Definition} to resolve conflict
  *
  * @see BeanDefinition

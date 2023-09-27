@@ -27,6 +27,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.spring.Constants;
 import org.apache.dubbo.config.spring.ReferenceBean;
+import org.apache.dubbo.config.spring.context.DubboConfigApplicationListener;
 import org.apache.dubbo.config.spring.context.event.DubboConfigInitEvent;
 import org.apache.dubbo.config.spring.reference.ReferenceAttributes;
 import org.apache.dubbo.config.spring.reference.ReferenceBeanManager;
@@ -52,6 +53,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.MethodMetadata;
 
@@ -168,9 +170,14 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
                     break;
                 }
             }
-        }
+            }
 
         try {
+            /**
+             * 早期事件 ,在{@link AbstractApplicationContext#registerListeners()}内部会通过事件多播发送早期事件，并且将早期事件集合清空
+             *
+             * {@link DubboConfigApplicationListener} 这个地方监听消息的
+             */
             // this is an early event, it will be notified at org.springframework.context.support.AbstractApplicationContext.registerListeners()
             applicationContext.publishEvent(new DubboConfigInitEvent(applicationContext));
         } catch (Exception e) {

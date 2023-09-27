@@ -356,7 +356,7 @@ public class ExtensionLoader<T> {
                 synchronized (cachedActivateGroups) {
                     // cache all extensions
                     if (cachedActivateGroups.size() == 0) {
-                        getExtensionClasses();
+                        getExtensionClasses();//todo 非常熟悉的获取扩展实现类的class方法
                         for (Map.Entry<String, Object> entry : cachedActivates.entrySet()) {
                             String name = entry.getKey();
                             Object activate = entry.getValue();
@@ -1295,6 +1295,7 @@ public class ExtensionLoader<T> {
 
             String[] names = NAME_SEPARATOR.split(name);
             if (ArrayUtils.isNotEmpty(names)) {
+                //todo 缓存激活的class对象
                 cacheActivateClass(clazz, names[0]);
                 for (String n : names) {
                     cacheName(clazz, n);

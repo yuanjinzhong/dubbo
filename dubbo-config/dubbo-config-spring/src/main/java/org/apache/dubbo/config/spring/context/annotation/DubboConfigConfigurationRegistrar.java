@@ -17,14 +17,20 @@
 package org.apache.dubbo.config.spring.context.annotation;
 
 import org.apache.dubbo.config.AbstractConfig;
+import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
+import org.apache.dubbo.config.spring.context.DubboConfigApplicationListener;
+import org.apache.dubbo.config.spring.context.DubboDeployApplicationListener;
 import org.apache.dubbo.config.spring.context.DubboSpringInitializer;
 
+import org.apache.dubbo.config.spring.util.DubboBeanUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.Ordered;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
+ * codex dubbo的基架类，导入bean工厂
+ *
  * Dubbo {@link AbstractConfig Config} {@link ImportBeanDefinitionRegistrar register}, which order can be configured
  *
  * @see EnableDubboConfig
@@ -38,5 +44,13 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         // initialize dubbo beans
         DubboSpringInitializer.initialize(registry);
+
+        /**
+         * 通过{@link EnableDubboConfig } 注解来的， 这个方法内部 会注册 几个核心的基础架构类到 beanDefinition中，
+         * @see  DubboBeanUtils#registerCommonBeans(BeanDefinitionRegistry)
+         *
+         * 包括重量级的：{@link ReferenceAnnotationBeanPostProcessor} {@link DubboDeployApplicationListener} {@link  DubboConfigApplicationListener}
+         *
+         */
     }
 }

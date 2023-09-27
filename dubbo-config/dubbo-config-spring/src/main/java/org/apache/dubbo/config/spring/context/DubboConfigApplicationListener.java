@@ -18,6 +18,7 @@ package org.apache.dubbo.config.spring.context;
 
 import org.apache.dubbo.common.logger.ErrorTypeAwareLogger;
 import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
 import org.apache.dubbo.config.spring.context.event.DubboConfigInitEvent;
 import org.apache.dubbo.config.spring.util.DubboBeanUtils;
 import org.apache.dubbo.rpc.model.ModuleModel;
@@ -51,6 +52,10 @@ public class DubboConfigApplicationListener implements ApplicationListener<Dubbo
         this.moduleModel = DubboBeanUtils.getModuleModel(applicationContext);
     }
 
+    /**
+     * {@link ReferenceAnnotationBeanPostProcessor} 这个地方发的
+     * @param event
+     */
     @Override
     public void onApplicationEvent(DubboConfigInitEvent event) {
         if (nullSafeEquals(applicationContext, event.getSource())) {
@@ -69,6 +74,7 @@ public class DubboConfigApplicationListener implements ApplicationListener<Dubbo
     private void initDubboConfigBeans() {
         // load DubboConfigBeanInitializer to init config beans
         if (applicationContext.containsBean(DubboConfigBeanInitializer.BEAN_NAME)) {
+            /**这边是实例化，会调用内部的{@link DubboConfigBeanInitializer#afterPropertiesSet()}*/
             applicationContext.getBean(DubboConfigBeanInitializer.BEAN_NAME, DubboConfigBeanInitializer.class);
         } else {
             logger.warn(CONFIG_DUBBO_BEAN_NOT_FOUND, "", "", "Bean '" + DubboConfigBeanInitializer.BEAN_NAME + "' was not found");
