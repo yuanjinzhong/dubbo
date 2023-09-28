@@ -126,6 +126,20 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
         super(DubboReference.class, Reference.class, com.alibaba.dubbo.config.annotation.Reference.class);
     }
 
+    /**
+     * {@link ReferenceAnnotationBeanPostProcessor#postProcessProperties(PropertyValues, Object, String)}
+     * 这个方法先调用， 这个方法里面会先把 {@link ReferenceBean} beanDefinition注册到 {@link BeanDefinitionRegistry}里面
+     *
+     * 所以下面关于isReferenceBean的判断就不奇怪了，因为是有这个beanDefinition的
+     * <pre class="code">
+     *     if (isReferenceBean(beanDefinition)) {
+     *                     continue;
+     *                 }
+     * </pre>
+     *
+     * @param beanFactory
+     * @throws BeansException
+     */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 
@@ -134,6 +148,10 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
             Class<?> beanType;
             if (beanFactory.isFactoryBean(beanName)) {
                 BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+                /**
+                 * 先执行的本类的postProcessProperties方法，里面有将{@link ReferenceBean}的beanDefinition注册到{@link BeanDefinitionRegistry}的逻辑
+                 * 所以这里判断是否是ReferenceBean是合理的
+                 */
                 if (isReferenceBean(beanDefinition)) {
                     continue;
                 }
@@ -151,6 +169,9 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
             if (beanType != null) {
                 AnnotatedInjectionMetadata metadata = findInjectionMetadata(beanName, beanType, null);
                 try {
+                    /**
+                     * codex 准备Dubbo的依赖注入
+                     */
                     prepareInjection(metadata);
                 } catch (BeansException e) {
                     throw e;
@@ -376,6 +397,9 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
                 }
                 Class<?> injectedType = methodElement.getInjectedType();
                 AnnotationAttributes attributes = methodElement.attributes;
+                /**
+                 * codex {@link ReferenceBean}的beandefinition注入到{@link beanDefinitionRegistry}里面
+                 */
                 String referenceBeanName = registerReferenceBean(methodElement.getPropertyName(), injectedType, attributes, methodElement.method);
 
                 //associate methodElement and reference bean
@@ -497,6 +521,11 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
 
         // Register the reference bean definition to the beanFactory
         RootBeanDefinition beanDefinition = new RootBeanDefinition();
+        /**
+         * codex {@link ReferenceBean}的beandefinition注入到{@link beanDefinitionRegistry}里面
+         * 为了后续执行 {@link ReferenceBean#afterPropertiesSet()}
+         * 该方法一执行{@link  ReferenceBean} 就会交给{@link referenceBeanManager} 管理
+         */
         beanDefinition.setBeanClassName(ReferenceBean.class.getName());
         beanDefinition.getPropertyValues().add(ReferenceAttributes.ID, referenceBeanName);
 

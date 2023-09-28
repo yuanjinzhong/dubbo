@@ -169,6 +169,9 @@ public class ServiceAnnotationPostProcessor implements BeanDefinitionRegistryPos
             Map<String, Object> annotationAttributes = getServiceAnnotationAttributes(beanDefinition);
             if (annotationAttributes != null) {
                 // process @DubboService at java-config @bean method
+                /**
+                 * codex 仅仅是将beanDefinition放到BeanDefinitionRegistry里面
+                 */
                 processAnnotatedBeanDefinition(beanName, (AnnotatedBeanDefinition) beanDefinition, annotationAttributes);
             }
         }

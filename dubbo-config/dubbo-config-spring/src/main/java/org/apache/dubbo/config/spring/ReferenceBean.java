@@ -146,6 +146,9 @@ public class ReferenceBean<T> implements FactoryBean<T>,
     private ReferenceConfig referenceConfig;
 
     // ReferenceBeanManager
+    /**
+     * codex 从bean工厂里面取出来的， 单例，线程安全；
+     */
     private ReferenceBeanManager referenceBeanManager;
 
     // Registration sources of this reference, may be xml file or annotation location
@@ -200,6 +203,10 @@ public class ReferenceBean<T> implements FactoryBean<T>,
      * @see DubboConfigBeanInitializer
      * @see ReferenceBeanManager#initReferenceBean(ReferenceBean)
      * @see DubboBeanDefinitionParser#configReferenceBean
+     */
+    /**
+     *  {@link ReferenceBean#afterPropertiesSet()} 这个方法先执行
+     * @return
      */
     @Override
     public T getObject() {
@@ -256,6 +263,9 @@ public class ReferenceBean<T> implements FactoryBean<T>,
         }
         Assert.notNull(this.interfaceName, "The interface name of ReferenceBean is not initialized");
 
+        /**
+         * referenceBeanManager 从 bean工厂里面取出来的，单例子，线程安全
+         */
         this.referenceBeanManager = beanFactory.getBean(ReferenceBeanManager.BEAN_NAME, ReferenceBeanManager.class);
         referenceBeanManager.addReference(this);
     }

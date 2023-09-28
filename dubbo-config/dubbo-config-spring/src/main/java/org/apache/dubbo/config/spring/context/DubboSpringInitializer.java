@@ -26,6 +26,7 @@ import org.apache.dubbo.rpc.model.ScopeModel;
 
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.SingletonBeanRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -136,6 +137,9 @@ public class DubboSpringInitializer {
         }
 
         // bind dubbo initialization context to spring context
+        /**
+         * 将三个单例注册到beanFactory中，这个beanFactory其实就是{@link SingletonBeanRegistry}
+         */
         registerContextBeans(beanFactory, context);
 
         // mark context as bound
@@ -143,6 +147,9 @@ public class DubboSpringInitializer {
         moduleModel.setLifeCycleManagedExternally(true);
 
         // register common beans
+        /**
+         * codex 注册基架类
+         */
         DubboBeanUtils.registerCommonBeans(registry);
     }
 
@@ -165,6 +172,9 @@ public class DubboSpringInitializer {
 
     private static void registerContextBeans(ConfigurableListableBeanFactory beanFactory, DubboSpringInitContext context) {
         // register singleton
+        /**
+         * 将三个单例注册到beanFactory中，这个beanFactory其实就是{@link SingletonBeanRegistry}
+         */
         registerSingleton(beanFactory, context);
         registerSingleton(beanFactory, context.getApplicationModel());
         registerSingleton(beanFactory, context.getModuleModel());

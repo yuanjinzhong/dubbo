@@ -39,6 +39,8 @@ import java.util.Set;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.rootBeanDefinition;
 
 /**
+ * codex 注解扫描， 可以粗略认为是用户定义的dubbo接口的扫描
+ *
  * Dubbo {@link DubboComponentScan} Bean Registrar
  *
  * @see Service

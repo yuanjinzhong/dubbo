@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.config.spring.util;
 
+import org.apache.dubbo.config.spring.ReferenceBean;
 import org.apache.dubbo.config.spring.beans.factory.annotation.DubboConfigAliasPostProcessor;
 import org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor;
 import org.apache.dubbo.config.spring.beans.factory.annotation.ServicePackagesHolder;
@@ -66,11 +67,17 @@ public interface DubboBeanUtils {
 
         registerInfrastructureBean(registry, ServicePackagesHolder.BEAN_NAME, ServicePackagesHolder.class);
 
+        /**
+         * codex 管理{@link ReferenceBean}，{@link ReferenceBean#getObject()} 方法返回远程服务的代理对象
+         */
         registerInfrastructureBean(registry, ReferenceBeanManager.BEAN_NAME, ReferenceBeanManager.class);
 
         // Since 2.5.7 Register @Reference Annotation Bean Processor as an infrastructure Bean
         /**
-         *  codex 注册ReferenceAnnotationBeanPostProcessor， 不是通过spring Boot的自动注入（{@link ServiceAnnotationPostProcessor} 是通过DubboAutoConfiguration 自动注入的）
+         *  codex 注册ReferenceAnnotationBeanPostProcessor， 不是通过spring Boot的自动注入;
+         *
+         *  （{@link ServiceAnnotationPostProcessor} 是通过DubboAutoConfiguration 自动注入的）
+         *
          */
         registerInfrastructureBean(registry, ReferenceAnnotationBeanPostProcessor.BEAN_NAME,
             ReferenceAnnotationBeanPostProcessor.class);

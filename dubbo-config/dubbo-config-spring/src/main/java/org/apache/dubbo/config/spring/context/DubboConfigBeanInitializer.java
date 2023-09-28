@@ -128,6 +128,11 @@ public class DubboConfigBeanInitializer implements BeanFactoryAware, Initializin
         logger.info("dubbo config beans are loaded.");
     }
 
+    /**
+     * 框架内容要想从spring容器里面取Bean对象，都是通过beanFactory来的；
+     * @param configClass
+     * @param configManager
+     */
     private void loadConfigBeansOfType(Class<? extends AbstractConfig> configClass, AbstractConfigManager configManager) {
         String[] beanNames = beanFactory.getBeanNamesForType(configClass, true, false);
         for (String beanName : beanNames) {

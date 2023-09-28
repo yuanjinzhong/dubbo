@@ -92,6 +92,13 @@ public class DubboBootstrapApplicationListener implements ApplicationListener, A
     private void initDubboConfigBeans() {
         // load DubboConfigBeanInitializer to init config beans
         if (applicationContext.containsBean(DubboConfigBeanInitializer.BEAN_NAME)) {
+            /**
+             * 主要是为了调用{@link DubboConfigBeanInitializer#afterPropertiesSet()} 方法
+             *
+             * 这个类废弃了，替代类为{@link DubboConfigApplicationListener}，同样的逻辑在该类里面也可以看到
+             *
+             * @see DubboConfigApplicationListener#initDubboConfigBeans()
+             */
             applicationContext.getBean(DubboConfigBeanInitializer.BEAN_NAME, DubboConfigBeanInitializer.class);
         } else {
             logger.warn(CONFIG_DUBBO_BEAN_NOT_FOUND, "", "", "Bean '" + DubboConfigBeanInitializer.BEAN_NAME + "' was not found");
