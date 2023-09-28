@@ -25,6 +25,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
+import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IGNORED_INTERFACE;
+
 @SpringBootApplication
 @Service
 @EnableDubbo
@@ -34,7 +36,7 @@ public class ConsumerApplication {
     private DemoService demoService;
 
     public static void main(String[] args) {
-
+        System.setProperty(DUBBO_NETWORK_IGNORED_INTERFACE,"en6,utun5,utun4,utun3,utun2,utun1,utun0,en2,en1,en3,en4,llw0,bridge0,awdl0,ap1,en8,stf0,gif0");
         ConfigurableApplicationContext context = SpringApplication.run(ConsumerApplication.class, args);
         ConsumerApplication application = context.getBean(ConsumerApplication.class);
         String result = application.doSayHello("world");

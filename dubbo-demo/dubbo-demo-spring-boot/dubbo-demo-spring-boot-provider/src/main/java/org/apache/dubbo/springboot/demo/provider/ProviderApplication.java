@@ -24,10 +24,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.concurrent.CountDownLatch;
 
+import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IGNORED_INTERFACE;
+
 @SpringBootApplication
 @EnableDubbo(scanBasePackages = {"org.apache.dubbo.springboot.demo.provider"})
 public class ProviderApplication {
     public static void main(String[] args) throws Exception {
+        System.setProperty(DUBBO_NETWORK_IGNORED_INTERFACE,"en6,utun5,utun4,utun3,utun2,utun1,utun0,en2,en1,en3,en4,llw0,bridge0,awdl0,ap1,en8,stf0,gif0");
         SpringApplication.run(ProviderApplication.class, args);
         System.out.println("dubbo service started");
         new CountDownLatch(1).await();
