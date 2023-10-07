@@ -30,6 +30,8 @@ import static org.apache.dubbo.rpc.Constants.PROXY_KEY;
 public interface ProxyFactory {
 
     /**
+     * 为传入的Invoker对象创建代理对象
+     *
      * create proxy.
      *
      * @param invoker
@@ -39,6 +41,8 @@ public interface ProxyFactory {
     <T> T getProxy(Invoker<T> invoker) throws RpcException;
 
     /**
+     * 为传入的Invoker对象创建代理对象
+     *
      * create proxy.
      *
      * @param invoker
@@ -48,6 +52,9 @@ public interface ProxyFactory {
     <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException;
 
     /**
+     *
+     * 将传入的代理对象封装成Invoker对象，可以暂时理解为getProxy()的逆操作
+     *
      * create invoker.
      *
      * @param <T>

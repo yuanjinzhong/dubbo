@@ -23,7 +23,7 @@ import org.apache.dubbo.common.extension.SPI;
  * Extension for intercepting the invocation for both service provider and consumer, furthermore, most of
  * functions in dubbo are implemented base on the same mechanism. Since every time when remote method is
  * invoked, the filter extensions will be executed too, the corresponding penalty should be considered before
- * more filters are added.
+ * more filters are added.（todo 因此在添加更多过滤器之前，需要考虑相应的性能损耗）
  * <pre>
  *  They way filter work from sequence point of view is
  *    <b>
@@ -57,6 +57,7 @@ import org.apache.dubbo.common.extension.SPI;
  *
  *                            Filter -> Invoker
  *
+ * todo Dubbo 3.x版本中引入了ClusterFilter，用于在LoadBalancer选择特定Filter（Invoker）之前拦截请求。
  *
  * Filter. (SPI, Singleton, ThreadSafe)
  *

@@ -41,6 +41,8 @@ dubbo:
       exporter:
         enabled: true
     enable-metadata: true
+  scan:
+    base-packages: org.apache.dubbo.springboot.demo.provider
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'

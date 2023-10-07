@@ -37,6 +37,9 @@ import java.lang.annotation.Target;
  * @see EnableDubboConfig
  * @since 2.5.8
  */
+/**
+ * spring boot 环境中不需要添加该注册了， 自动配置类{@link org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration} 完全实现类该注解的功能
+ */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited

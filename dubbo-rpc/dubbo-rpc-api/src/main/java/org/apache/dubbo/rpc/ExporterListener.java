@@ -26,6 +26,8 @@ import org.apache.dubbo.common.extension.SPI;
 public interface ExporterListener {
 
     /**
+     * 当有服务发布的时候，会触发该方法
+     *
      * The exporter exported.
      *
      * @param exporter
@@ -35,6 +37,8 @@ public interface ExporterListener {
     void exported(Exporter<?> exporter) throws RpcException;
 
     /**
+     * 当有服务取消发布的时候，会触发该方法
+     *
      * The exporter unexported.
      *
      * @param exporter

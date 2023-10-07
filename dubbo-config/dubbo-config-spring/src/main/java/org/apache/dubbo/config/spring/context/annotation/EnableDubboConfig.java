@@ -67,7 +67,6 @@ import java.lang.annotation.Target;
 /**
  * codex spring boot 环境中不需要显示的添加该注解， 自动配置类{@link org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration} 中，手动添加了该注解；
  *
- * 上面这句话不完全正确，使用者还是需要显示的添加 @EnableDubbo
  *
  * 则使用者不需要添加该注解
  *

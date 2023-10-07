@@ -125,7 +125,7 @@ public class DubboProtocol extends AbstractProtocol {
 
                 Invocation inv = (Invocation) message;
                 Invoker<?> invoker = inv.getInvoker() == null ? getInvoker(channel, inv) : inv.getInvoker();
-                // switch TCCL
+                // switch TCCL：Thread Context Class Loader，即线程上下文类加载器
                 if (invoker.getUrl().getServiceModel() != null) {
                     Thread.currentThread().setContextClassLoader(invoker.getUrl().getServiceModel().getClassLoader());
                 }
@@ -153,6 +153,9 @@ public class DubboProtocol extends AbstractProtocol {
                     }
                 }
                 RpcContext.getServiceContext().setRemoteAddress(channel.getRemoteAddress());
+                /**
+                 * 执行真正的调用
+                 */
                 Result result = invoker.invoke(inv);
                 return result.thenApply(Function.identity());
             }
@@ -329,32 +332,40 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
 
-        openServer(url);
-        optimizeSerialization(url);
+        openServer(url);//todo 一路调用 Exchange 层、Transport 层，并最终创建 NettyServer 来接收客户端的请求。
+        optimizeSerialization(url);//对指定的序列化算法进行优化。
 
         return exporter;
     }
 
+    /**
+     * todo 创建 ProtocolServer 并对外服务
+     * @param url
+     */
     private void openServer(URL url) {
         checkDestroyed();
         // find server.
         String key = url.getAddress();
         // client can export a service which only for server to invoke
         boolean isServer = url.getParameter(IS_SERVER_KEY, true);
-
+        /**
+         * 根据 URL 判断当前是否为服务端，只有服务端才能创建 ProtocolServer 并对外服务
+         */
         if (isServer) {
             ProtocolServer server = serverMap.get(key);
-            if (server == null) {
+            if (server == null) {//todo  无ProtocolServer监听该地址
                 synchronized (this) {
                     server = serverMap.get(key);
                     if (server == null) {
-                        serverMap.put(key, createServer(url));
+                        // todo  调用createServer()方法创建ProtocolServer对象
+                        serverMap.put(key, createServer(url));//todo  createServer(url) 一路调用  Exchange 层、Transport 层，并最终创建 NettyServer 来接收客户端的请求。
                         return;
                     }
                 }
             }
 
             // server supports reset, use together with override
+            // todo 如果已有ProtocolServer实例，则尝试根据URL信息重置ProtocolServer
             server.reset(url);
         }
     }
@@ -367,10 +378,11 @@ public class DubboProtocol extends AbstractProtocol {
 
     private ProtocolServer createServer(URL url) {
         url = URLBuilder.from(url)
-            // send readonly event when server closes, it's enabled by default
+            // send readonly event when server closes, it's enabled by default ，ReadOnly请求是否阻塞等待
             .addParameterIfAbsent(CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString())
-            // enable heartbeat by default
+            // enable heartbeat by default  心跳间隔 60000 表示默认的心跳时间间隔为 60 秒。
             .addParameterIfAbsent(HEARTBEAT_KEY, String.valueOf(DEFAULT_HEARTBEAT))
+            //Codec2扩展实现
             .addParameter(CODEC_KEY, DubboCodec.NAME)
             .build();
 
@@ -381,6 +393,7 @@ public class DubboProtocol extends AbstractProtocol {
 
         ExchangeServer server;
         try {
+           // 通过Exchangers门面类，创建ExchangeServer对象
             server = Exchangers.bind(url, requestHandler);
         } catch (RemotingException e) {
             throw new RpcException("Fail to start server(url: " + url + ") " + e.getMessage(), e);
@@ -415,6 +428,14 @@ public class DubboProtocol extends AbstractProtocol {
         return invoker;
     }
 
+    /**
+     * 创建了底层发送请求和接收响应的 Client 集合
+     * 其核心分为了两个部分，
+     * 一个是针对共享连接的处理，
+     * 另一个是针对独享连接的处理，
+     * @param url
+     * @return
+     */
     private ClientsProvider getClients(URL url) {
         int connections = url.getParameter(CONNECTIONS_KEY, 0);
         // whether to share connection

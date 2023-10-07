@@ -29,7 +29,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IG
 
 @SpringBootApplication
 @Service
-@EnableDubbo
+//@EnableDubbo 可以不加，spring boot 自动配置 {@link org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration}
 public class ConsumerApplication {
 
     @DubboReference

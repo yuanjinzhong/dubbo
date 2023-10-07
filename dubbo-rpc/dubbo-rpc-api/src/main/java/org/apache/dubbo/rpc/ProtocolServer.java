@@ -22,7 +22,9 @@ import org.apache.dubbo.remoting.RemotingServer;
 import java.util.Map;
 
 /**
- * Distinct from {@link RemotingServer}, each protocol holds one or more ProtocolServers(the number usually decides by port numbers),
+ * protocol--> 持有多个ProtocolServers--> 持有多个RemotingServer
+ *
+ * Distinct（有区别的） from {@link RemotingServer}, each protocol holds one or more ProtocolServers(the number usually decides by port numbers),
  * while each ProtocolServer holds zero or one RemotingServer.
  */
 public interface ProtocolServer {

@@ -27,7 +27,15 @@ import java.util.concurrent.CountDownLatch;
 import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IGNORED_INTERFACE;
 
 @SpringBootApplication
-@EnableDubbo(scanBasePackages = {"org.apache.dubbo.springboot.demo.provider"})
+/**
+ * 可以不需要下面的{@link EnableDubbo}注解，前提是yml里面含有
+ *   scan:
+ *     base-packages: org.apache.dubbo.springboot.demo.provider
+ * 配置
+ *
+ * 因为DubboAutoConfiguration自动配置了
+ */
+//@EnableDubbo(scanBasePackages = {"org.apache.dubbo.springboot.demo.provider"})
 public class ProviderApplication {
     public static void main(String[] args) throws Exception {
         System.setProperty(DUBBO_NETWORK_IGNORED_INTERFACE,"en6,utun5,utun4,utun3,utun2,utun1,utun0,en2,en1,en3,en4,llw0,bridge0,awdl0,ap1,en8,stf0,gif0");

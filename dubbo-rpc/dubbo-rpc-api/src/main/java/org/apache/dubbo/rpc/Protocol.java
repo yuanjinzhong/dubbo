@@ -48,7 +48,7 @@ import java.util.List;
  * <li>
  *     The Protocol implementation does not care the transparent（透明的） proxy. The invoker will be converted to business interface by other layer.
  *
- *                                                                               这个invoker是框架传入，自定义协议的时候不需要关系这个参数
+ *                                                                               这个invoker是框架传入，自定义协议的时候不需要关心这个参数
  * </li>
  *
  * <li>
@@ -69,6 +69,9 @@ public interface Protocol {
     int getDefaultPort();
 
     /**
+     * 将一个Invoker暴露出去，export()方法实现需要是幂等的，
+     * 即同一个服务暴露多次和暴露一次的效果是相同的
+     *
      * Export service for remote invocation: <br>
      * 1. Protocol should record request source address after receive a request:
      * RpcContext.getServerAttachment().setRemoteAddress();<br>
@@ -85,6 +88,10 @@ public interface Protocol {
     <T> Exporter<T> export(Invoker<T> invoker) throws RpcException;//todo 这个invoker是框架传入，自定义协议的时候不需要关系这个参数
 
     /**
+     * 引用一个Invoker，refer()方法会根据参数返回一个Invoker对象，
+     *
+     * Consumer端可以通过这个Invoker请求到Provider端的服务
+     *
      * Refer a remote service: <br>
      * 1. When user calls `invoke()` method of `Invoker` object which's returned from `refer()` call, the protocol
      * needs to correspondingly（相应的） execute `invoke()` method of `Invoker` object <br>
@@ -97,6 +104,8 @@ public interface Protocol {
      * connection fails.
      *
      * <p>todo  url里面有check=false时，invoker 必须不能抛出异常， 且当远程链接恢复的时候需要尝试恢复调用</p>
+     *
+     * todo consumer 通过 {@link refer} 方法，得到一个Invoker，consumer端通过这个Invoker发起远程调用
      *
      * @param <T>  Service type
      * @param type Service class
