@@ -154,7 +154,7 @@ public class DubboProtocol extends AbstractProtocol {
                 }
                 RpcContext.getServiceContext().setRemoteAddress(channel.getRemoteAddress());
                 /**
-                 * 执行真正的调用
+                 * todo 执行真正的RPC调用？
                  */
                 Result result = invoker.invoke(inv);
                 return result.thenApply(Function.identity());
@@ -449,9 +449,10 @@ public class DubboProtocol extends AbstractProtocol {
                 : url.getParameter(SHARE_CONNECTIONS_KEY, (String) null);
             connections = Integer.parseInt(shareConnectionsStr);
 
-            return getSharedClient(url, connections);
+            return getSharedClient(url, connections); //共享远程链接
         }
 
+        // 每个service 独立享一个远程链接
         List<ExchangeClient> clients = IntStream.range(0, connections)
             .mapToObj((i) -> initClient(url))
             .collect(Collectors.toList());
@@ -529,7 +530,7 @@ public class DubboProtocol extends AbstractProtocol {
          */
         String str = url.getParameter(CLIENT_KEY, url.getParameter(SERVER_KEY, DEFAULT_REMOTING_CLIENT));
 
-        // BIO is not allowed since it has severe performance issue.
+        // BIO is not allowed since it has severe performance issue. //todo 不允许BIO,这边做个校验
         if (StringUtils.isNotEmpty(str) && !url.getOrDefaultFrameworkModel().getExtensionLoader(Transporter.class).hasExtension(str)) {
             throw new RpcException("Unsupported client type: " + str + "," +
                 " supported client type is " + StringUtils.join(url.getOrDefaultFrameworkModel().getExtensionLoader(Transporter.class).getSupportedExtensions(), " "));
@@ -537,7 +538,7 @@ public class DubboProtocol extends AbstractProtocol {
 
         try {
             ScopeModel scopeModel = url.getScopeModel();
-            int heartbeat = UrlUtils.getHeartbeat(url);
+            int heartbeat = UrlUtils.getHeartbeat(url);//todo 获取心跳，默认60秒
             // Replace InstanceAddressURL with ServiceConfigURL.
             url = new ServiceConfigURL(DubboCodec.NAME, url.getUsername(), url.getPassword(), url.getHost(), url.getPort(), url.getPath(), url.getAllParameters());
             url = url.addParameter(CODEC_KEY, DubboCodec.NAME);
@@ -548,7 +549,7 @@ public class DubboProtocol extends AbstractProtocol {
             // connection should be lazy
             return url.getParameter(LAZY_CONNECT_KEY, false)
                 ? new LazyConnectExchangeClient(url, requestHandler)
-                : Exchangers.connect(url, requestHandler);
+                : Exchangers.connect(url, requestHandler);//todo 到Exchange层了
         } catch (RemotingException e) {
             throw new RpcException("Fail to create remoting client for service(" + url + "): " + e.getMessage(), e);
         }

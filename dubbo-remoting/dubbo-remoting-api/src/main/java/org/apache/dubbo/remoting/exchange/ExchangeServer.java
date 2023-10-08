@@ -29,7 +29,7 @@ public interface ExchangeServer extends RemotingServer {
     /**
      * get channels.
      *
-     * @return channels
+     * @return channels 这个channel就是 ExchangeClient, 有一部分的含义是想表达的 一个ExchangeServer 有多个ExchangeClient
      */
     Collection<ExchangeChannel> getExchangeChannels();
 

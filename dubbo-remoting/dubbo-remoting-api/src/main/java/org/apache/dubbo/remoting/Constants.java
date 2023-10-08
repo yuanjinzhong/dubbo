@@ -99,6 +99,7 @@ public interface Constants {
 
     String SERVER_KEY = "server";
 
+    //这个属性用于标识是否为PU（Provider-User）服务器。当Dubbo作为服务提供者时，可以通过设置该属性来指示是否为PU服务器。PU服务器是指既充当服务提供者又充当服务消费者的服务器。
     String IS_PU_SERVER_KEY = "ispuserver";
 
     String CLIENT_KEY = "client";

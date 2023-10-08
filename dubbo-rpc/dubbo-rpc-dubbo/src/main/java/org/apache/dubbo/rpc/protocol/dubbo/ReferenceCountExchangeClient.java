@@ -36,6 +36,8 @@ import static org.apache.dubbo.common.constants.LoggerCodeConstants.PROTOCOL_FAI
 
 /**
  * dubbo protocol support class.
+ *
+ * todo 这仅仅是一层薄薄的静态代理，真正的功能还是委托属性 ：private ExchangeClient client;
  */
 @SuppressWarnings("deprecation")
 final class ReferenceCountExchangeClient implements ExchangeClient {
@@ -45,7 +47,7 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     private final AtomicInteger referenceCount = new AtomicInteger(0);
     private final AtomicInteger disconnectCount = new AtomicInteger(0);
     private static final Integer warningPeriod = 50;
-    private ExchangeClient client;
+    private ExchangeClient client;//todo  真正起作用的远程客户端
     private int shutdownWaitTime = DEFAULT_SERVER_SHUTDOWN_TIMEOUT;
 
     public ReferenceCountExchangeClient(ExchangeClient client, String codec) {

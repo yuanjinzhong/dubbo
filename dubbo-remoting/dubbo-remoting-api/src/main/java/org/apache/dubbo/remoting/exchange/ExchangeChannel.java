@@ -52,6 +52,7 @@ public interface ExchangeChannel extends Channel {
      * send request.
      *
      * @param request
+     * @param executor todo 为了支持异步 所以传入线程池
      * @return response future
      * @throws RemotingException
      */

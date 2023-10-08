@@ -201,6 +201,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
         //todo 同步异步设置
         inv.setInvokeMode(RpcUtils.getInvokeMode(url, inv));
 
+        //todo 如果是异步调用，给这次调用添加一个唯一ID
         RpcUtils.attachInvocationIdIfAsync(getUrl(), inv);
 
         //todo 猜测，异步场景中用来管理 client  和server 端

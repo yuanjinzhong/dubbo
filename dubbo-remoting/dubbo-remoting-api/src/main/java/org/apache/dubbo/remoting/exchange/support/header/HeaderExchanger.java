@@ -45,6 +45,12 @@ public class HeaderExchanger implements Exchanger {
     @Override
     public ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {
         ExchangeServer server;
+        /**
+         * PU服务器是指既充当服务提供者又充当服务消费者的服务器。
+         *
+         * 如果是PuServcer，则需要在线程中启动 Netty Client 和Netty Server的相关代码
+         *
+         */
         boolean isPuServerKey = url.getParameter(IS_PU_SERVER_KEY, false);
         if(isPuServerKey) {
             server = new HeaderExchangeServer(PortUnificationExchanger.bind(url, new DecodeHandler(new HeaderExchangeHandler(handler))));

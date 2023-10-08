@@ -256,6 +256,12 @@ public class HeaderExchangeServer implements ExchangeServer {
         }
     }
 
+    /**
+     * 参考的netty的Hash事件轮处理超时的Io链接
+     * @see HashedWheelTimer
+     * @see HashedWheelTimer.HashedWheelTimeout
+     * @param url
+     */
     private void startIdleCheckTask(URL url) {
         if (!server.canHandleIdle()) {
             AbstractTimerTask.ChannelProvider cp = () -> unmodifiableCollection(HeaderExchangeServer.this.getChannels());

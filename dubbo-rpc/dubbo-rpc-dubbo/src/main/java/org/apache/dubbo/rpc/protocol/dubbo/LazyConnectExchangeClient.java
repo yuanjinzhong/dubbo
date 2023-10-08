@@ -65,6 +65,15 @@ final class LazyConnectExchangeClient implements ExchangeClient {
         this.requestWithWarning = url.getParameter(LAZY_REQUEST_WITH_WARNING_KEY, DEFAULT_LAZY_REQUEST_WITH_WARNING);
     }
 
+    /**
+     * 被{@link checkClient}方法调用，里面是懒加载的检查逻辑
+     *
+     * 未创建client，则主动去创建
+     * <p><code>Exchangers.connect(url, requestHandler);</code>
+     * 创建了则退出该方法
+     *
+     * @throws RemotingException
+     */
     private void initClient() throws RemotingException {
         if (client != null) {
             return;
@@ -86,7 +95,7 @@ final class LazyConnectExchangeClient implements ExchangeClient {
     @Override
     public CompletableFuture<Object> request(Object request) throws RemotingException {
         warning();
-        checkClient();
+        checkClient();//todo 这是是懒加载,真正发起调用的时候才判断client是否纯在，不存在则通过Exchange去创建
         return client.request(request);
     }
 

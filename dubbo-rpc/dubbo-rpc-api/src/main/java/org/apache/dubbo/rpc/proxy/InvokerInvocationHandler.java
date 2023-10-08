@@ -71,7 +71,7 @@ public class InvokerInvocationHandler implements InvocationHandler {
         if (serviceModel instanceof ConsumerModel) {
             rpcInvocation.put(Constants.CONSUMER_MODEL, serviceModel);
             rpcInvocation.put(Constants.METHOD_MODEL, ((ConsumerModel) serviceModel).getMethodModel(method));
-        }
+        }// todo 真正的发起RPC调用
         return InvocationUtil.invoke(invoker, rpcInvocation);
     }
 }

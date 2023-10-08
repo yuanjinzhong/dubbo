@@ -38,10 +38,10 @@ import java.util.concurrent.Future;
  * There are four kinds of RpcContext, which are ServerContext, ClientAttachment, ServerAttachment and ServiceContext.
  * <p/>
  * ServiceContext: Using to pass environment parameters in the whole invocation. For example, `remotingApplicationName`,
- * `remoteAddress`, etc. {@link RpcServiceContext}
- * ClientAttachment, ServerAttachment and ServiceContext are using to transfer attachments.
+ * `remoteAddress`, etc. {@link RpcServiceContext} todo ServiceContext 是用来在调用过程中传递环境变量的
+ * ClientAttachment, ServerAttachment and ServiceContext are using to transfer attachments. todo 这三个threadLocal是用来传递附件的
  * Imaging a situation like this, A is calling B, and B will call C, after that, B wants to return some attachments back to A.
- * ClientAttachment is using to pass attachments to next hop as a consumer. ( A --> B , in A side)
+ * ClientAttachment is using to pass attachments to next hop（下一跳：网络用语） as a consumer. ( A --> B , in A side)
  * ServerAttachment is using to fetch attachments from previous hop as a provider. ( A --> B , in B side)
  * ServerContext is using to return some attachments back to client as a provider. ( A <-- B , in B side)
  * The reason why using `ServiceContext` is to make API compatible with previous.
@@ -70,7 +70,7 @@ public class RpcContext {
             return new RpcContextAttachment();
         }
     };
-
+    //todo  服务端附件，客户端附件
     private static final InternalThreadLocal<RpcContextAttachment> CLIENT_ATTACHMENT = new InternalThreadLocal<RpcContextAttachment>() {
         @Override
         protected RpcContextAttachment initialValue() {
