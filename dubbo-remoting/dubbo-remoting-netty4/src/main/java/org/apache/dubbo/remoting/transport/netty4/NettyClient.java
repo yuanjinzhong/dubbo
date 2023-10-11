@@ -134,7 +134,7 @@ public class NettyClient extends AbstractClient {
                 }
 
                 /***这边的channelHandle全是可以共享的*/
-                LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+                LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
 
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
                 /***入栈&出栈日志记录*/

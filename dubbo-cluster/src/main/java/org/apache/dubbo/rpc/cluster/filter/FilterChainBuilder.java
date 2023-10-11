@@ -193,10 +193,14 @@ public interface FilterChainBuilder {
 
         @Override
         public Result invoke(Invocation invocation) throws RpcException {
+            // filterInvoker 是CopyOfFilterChainNode 链表
             Result asyncResult = filterInvoker.invoke(invocation);
             asyncResult.whenCompleteWithContext((r, t) -> {
                 RuntimeException filterRuntimeException = null;
-                for (int i = filters.size() - 1; i >= 0; i--) { // todo filter链，循环调用
+                /**
+                 * 为了走org.apache.dubbo.rpc.BaseFilter.Listener的回调
+                 */
+                for (int i = filters.size() - 1; i >= 0; i--) {
                     FILTER filter = filters.get(i);
                     try {
                         InvocationProfilerUtils.releaseDetailProfiler(invocation);
@@ -298,7 +302,7 @@ public interface FilterChainBuilder {
     class CopyOfFilterChainNode<T, TYPE extends Invoker<T>, FILTER extends BaseFilter> implements Invoker<T> {
         private static final ErrorTypeAwareLogger LOGGER = LoggerFactory.getErrorTypeAwareLogger(CopyOfFilterChainNode.class);
         TYPE originalInvoker;
-        Invoker<T> nextNode;
+        Invoker<T> nextNode; // 这个也是CopyOfFilterChainNode
         FILTER filter;
 
         public CopyOfFilterChainNode(TYPE originalInvoker, Invoker<T> nextNode, FILTER filter) {
@@ -326,11 +330,33 @@ public interface FilterChainBuilder {
             return originalInvoker.isAvailable();
         }
 
+        /**
+         * <p>首先每个{@link CopyOfFilterChainNode}对象内部都有维护各自的{@link filter}、{@link  nextNode}
+         *
+         * <p>在{@link CopyOfFilterChainNode}内部的{@link invoke} 方法中，委托调用{@link BaseFilter#invoke(Invoker, Invocation)}，
+         *
+         * <p>该方法规定:Always call invoker.invoke() in the implementation to hand over （传递）the request to the next filter node.
+         *
+         * <p>方法入参的{@link invoker}是这里的{@link nextNode} 也就是 {@link CopyOfFilterChainNode}对象，
+         *
+         * <p>调用 invoker.invoke()时，等价于递归调用当前方法{FilterChainBuilder.CopyOfFilterChainNode#invoke(Invocation)}
+         *
+         * <p>当前{@link CopyOfFilterChainNode} 是个链表，持有下一个{@link CopyOfFilterChainNode} 用{@linK nextNode}属性表示
+         * <p>
+         * <p>链表的最后一个节点的俩个属性分别是：
+         * <li>{@link nextNode}:真正的invoker,等于originalInvoker属性</li>
+         * <li>{@link filter}: 从扩展点中加载的排好序的filter的最后一个（因为构建链表的时候，最后一个filter和真正的invoker 被包在最内层）</li>
+         *
+         * <p><b>该方法最终达到的效果是: 各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法，从而发起RPC调用</b></p>
+         *
+         */
         @Override
         public Result invoke(Invocation invocation) throws RpcException {
             Result asyncResult;
             try {
-                InvocationProfilerUtils.enterDetailProfiler(invocation, () -> "Filter " + filter.getClass().getName() + " invoke.");
+                /** 至关重要的方法
+                 *  各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法，从而发起RPC调用
+                 */
                 asyncResult = filter.invoke(nextNode, invocation);
                 if (!(asyncResult instanceof AsyncRpcResult)) {
                     String msg = "The result of filter invocation must be AsyncRpcResult. (If you want to recreate a result, please use AsyncRpcResult.newDefaultAsyncResult.) " +

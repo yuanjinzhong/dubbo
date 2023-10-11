@@ -34,6 +34,12 @@ import static org.apache.dubbo.common.constants.CommonConstants.SERVICE_FILTER_K
 
 /**
  * ListenerProtocol
+ *
+ * 在我看来这是整合 protocol和filter,将这两个包在一起
+ *
+ * 在 Protocol 的 Extension 中， ProtocolFilterWrapper 为 Protocol 的 export() 和 refer() 方法添加了一层 Filter 扩展，
+ * 它会在服务引用和服务消费时，为 Invoker 实体域上包装一层层的 Filter 来做代码增强（AOP）。也就是在 Invoker 被执行之前会经过一堆的 Filter 的处理。
+ *
  */
 @Activate(order = 100)
 public class ProtocolFilterWrapper implements Protocol {
@@ -71,6 +77,9 @@ public class ProtocolFilterWrapper implements Protocol {
             return protocol.refer(type, url);
         }
         FilterChainBuilder builder = getFilterChainBuilder(url);
+        /**
+         *  构建chain, chain的元素是CopyOfFilterChainNode，也是一个invoker
+         */
         return builder.buildInvokerChain(protocol.refer(type, url), REFERENCE_FILTER_KEY, CommonConstants.CONSUMER);
     }
 

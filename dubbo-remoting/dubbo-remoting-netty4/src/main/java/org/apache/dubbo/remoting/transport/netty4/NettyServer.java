@@ -134,7 +134,7 @@ public class NettyServer extends AbstractServer {
     protected void initServerBootstrap(NettyServerHandler nettyServerHandler) {
         boolean keepalive = getUrl().getParameter(KEEP_ALIVE_KEY, Boolean.FALSE);
         /***这边的channelHandle全是可以共享的*/
-        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
         bootstrap.group(bossGroup, workerGroup)
             .channel(NettyEventLoopFactory.serverSocketChannelClass())
             .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)

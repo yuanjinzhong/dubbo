@@ -39,6 +39,8 @@ public class DefaultFilterChainBuilder implements FilterChainBuilder {
 
     /**
      * build consumer/provider filter chain
+     *
+     * 构建聚合invoker+filter的chain
      */
     @Override
     public <T> Invoker<T> buildInvokerChain(final Invoker<T> originalInvoker, String key, String group) {
@@ -47,6 +49,7 @@ public class DefaultFilterChainBuilder implements FilterChainBuilder {
         List<ModuleModel> moduleModels = getModuleModelsFromUrl(url);
         List<Filter> filters;
         if (moduleModels != null && moduleModels.size() == 1) {
+            // 获取 provider端或者consumer端的filter
             filters = ScopeModelUtil.getExtensionLoader(Filter.class, moduleModels.get(0)).getActivateExtension(url, key, group);
         } else if (moduleModels != null && moduleModels.size() > 1) {
             filters = new ArrayList<>();
@@ -65,10 +68,18 @@ public class DefaultFilterChainBuilder implements FilterChainBuilder {
 
         if (!CollectionUtils.isEmpty(filters)) {
             for (int i = filters.size() - 1; i >= 0; i--) {
+                //这边倒序获取filter组转成filterChain链表，构造chainNode,
                 final Filter filter = filters.get(i);
+                // 最终得到的是 CopyOfFilterChainNode<CopyOfFilterChainNode<CopyOfFilterChainNode<originalInvoker,filterN号>，filter2号>filter1号>
                 final Invoker<T> next = last;
                 last = new CopyOfFilterChainNode<>(originalInvoker, next, filter);
             }
+            /**
+             * 之所以用CallbackRegistrationInvoker再包装一下是为了在内部做静态代理逻辑：
+             * <li>如果filter instance of FILTER.Listener 则调用 onResponse 、onError 的回调方法 </li>
+             *
+             * 为了回调！！！
+             */
             return new CallbackRegistrationInvoker<>(last, filters);
         }
 

@@ -48,6 +48,12 @@ import static org.apache.dubbo.common.constants.LoggerCodeConstants.REGISTRY_FAI
 import static org.apache.dubbo.registry.client.migration.model.MigrationStep.APPLICATION_FIRST;
 import static org.apache.dubbo.rpc.cluster.Constants.REFER_KEY;
 
+/**
+ * dubbo2 是接口级别的注册发现（注册中心压力大），dubbo 3 是应用级别的注册发现（注册中心压力小）
+ *
+ * 使用者在使用dubbo的时候必然存在一个dubbo版本升级的过程，这对应着注册发现模型的变动，继而对应的Invoker逻辑的变动，所以产生了该类：MigrationInvoker， 顾名思义，迁移invoker
+ * @param <T>
+ */
 public class MigrationInvoker<T> implements MigrationClusterInvoker<T> {
     private final ErrorTypeAwareLogger logger = LoggerFactory.getErrorTypeAwareLogger(MigrationInvoker.class);
 

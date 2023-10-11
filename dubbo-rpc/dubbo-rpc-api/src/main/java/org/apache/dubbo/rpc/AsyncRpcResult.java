@@ -231,6 +231,10 @@ public class AsyncRpcResult implements Result {
     }
 
     public Result whenCompleteWithContext(BiConsumer<Result, Throwable> fn) {
+        //CompletableFuture的whenComplete方法不会阻塞。它是一个异步方法，不会阻塞当前线程。
+        // 当CompletableFuture的执行完成后，回调操作会被异步执行，而不会阻塞主线程的执行。
+        // 这使得你可以继续执行其他操作，而不必等待whenComplete方法的回调完成。
+        // 因此，当CompleteableFuture的whenComplete方法被调用时，它不会阻塞程序的执行。
         this.responseFuture = this.responseFuture.whenComplete((v, t) -> {
             if (async) {
                 RpcContext.restoreContext(storedContext);

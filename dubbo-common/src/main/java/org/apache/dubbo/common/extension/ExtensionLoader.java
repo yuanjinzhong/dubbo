@@ -322,7 +322,7 @@ public class ExtensionLoader<T> {
      * This is equivalent to {@code getActivateExtension(url, url.getParameter(key).split(","), null)}
      *
      * @param url   url
-     * @param key   url parameter key which used to get extension point names
+     * @param key   url parameter key which used to get extension point names 扩展点的名字（key） 从Url中获取
      * @param group group
      * @return extension list which are activated.
      * @see #getActivateExtension(org.apache.dubbo.common.URL, String[], String)
