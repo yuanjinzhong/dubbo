@@ -32,6 +32,10 @@ import java.util.Arrays;
 import static org.apache.dubbo.common.constants.LoggerCodeConstants.PROXY_FAILED;
 
 /**
+ * 生成的代理类参考：{@link DemoServiceDubboProxy0}
+ */
+
+/**
  * JavassistRpcProxyFactory
  */
 public class JavassistProxyFactory extends AbstractProxyFactory {

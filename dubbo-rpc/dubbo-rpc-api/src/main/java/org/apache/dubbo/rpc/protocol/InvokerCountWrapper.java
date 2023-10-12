@@ -28,6 +28,10 @@ import org.apache.dubbo.rpc.RpcException;
 public class InvokerCountWrapper implements Protocol {
     private final Protocol protocol;
 
+    /**
+     * 有包含protocol的 构造函数，则在{@link org.apache.dubbo.common.extension.ExtensionLoader#getExtension(String)}的逻辑里面会有包装行为
+     * @param protocol
+     */
     public InvokerCountWrapper(Protocol protocol) {
         this.protocol = protocol;
     }

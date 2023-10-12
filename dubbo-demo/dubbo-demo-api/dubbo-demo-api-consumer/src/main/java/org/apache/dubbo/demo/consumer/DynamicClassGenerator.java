@@ -2,7 +2,7 @@ package org.apache.dubbo.demo.consumer;
 
 import javassist.*;
 
-/**
+/** 这是一个测试
  * javaasist动态生成类
  */
 public class DynamicClassGenerator {

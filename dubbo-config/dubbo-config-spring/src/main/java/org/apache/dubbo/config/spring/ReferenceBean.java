@@ -203,6 +203,8 @@ public class ReferenceBean<T> implements FactoryBean<T>,
      * @see DubboConfigBeanInitializer
      * @see ReferenceBeanManager#initReferenceBean(ReferenceBean)
      * @see DubboBeanDefinitionParser#configReferenceBean
+     *
+     * todo 创建服务调用的代理对象
      */
     /**
      *  {@link ReferenceBean#afterPropertiesSet()} 这个方法先执行
@@ -371,6 +373,10 @@ public class ReferenceBean<T> implements FactoryBean<T>,
         }
     }
 
+    /**
+     * 生成服务端引用代理对象
+     * @param interfaces
+     */
     private void generateFromJavassistFirst(List<Class<?>> interfaces) {
         try {
             this.lazyProxy = Proxy.getProxy(interfaces.toArray(new Class[0])).newInstance(new LazyTargetInvocationHandler(new DubboReferenceLazyInitTargetSource()));

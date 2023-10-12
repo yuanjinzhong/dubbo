@@ -18,7 +18,6 @@
 package org.apache.dubbo.springboot.demo.consumer;
 
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,15 +29,15 @@ import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IG
 @SpringBootApplication
 @Service
 //@EnableDubbo 可以不加，spring boot 自动配置 {@link org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration}
-public class ConsumerApplication {
+public class ConsumerApplication99 {
 
     @DubboReference
     private DemoService demoService;
 
     public static void main(String[] args) {
         System.setProperty(DUBBO_NETWORK_IGNORED_INTERFACE,"en6,utun5,utun4,utun3,utun2,utun1,utun0,en2,en1,en3,en4,llw0,bridge0,awdl0,ap1,en8,stf0,gif0");
-        ConfigurableApplicationContext context = SpringApplication.run(ConsumerApplication.class, args);
-        ConsumerApplication application = context.getBean(ConsumerApplication.class);
+        ConfigurableApplicationContext context = SpringApplication.run(ConsumerApplication99.class, args);
+        ConsumerApplication99 application = context.getBean(ConsumerApplication99.class);
         String result = application.doSayHello("world");
         System.out.println("result: " + result);
     }
