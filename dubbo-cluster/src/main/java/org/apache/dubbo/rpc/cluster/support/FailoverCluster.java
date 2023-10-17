@@ -19,6 +19,9 @@ package org.apache.dubbo.rpc.cluster.support;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.Directory;
 import org.apache.dubbo.rpc.cluster.support.wrapper.AbstractCluster;
+/**
+ * 失败的时候会默认重试其他服务器, 故障转移
+ */
 
 /**
  * {@link FailoverClusterInvoker}

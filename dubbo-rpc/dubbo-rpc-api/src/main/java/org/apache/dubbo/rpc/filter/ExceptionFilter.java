@@ -61,11 +61,11 @@ public class ExceptionFilter implements Filter, Filter.Listener {
             try {
                 Throwable exception = appResponse.getException();
 
-                // directly throw if it's checked exception
+                // directly throw if it's checked exception  检查型异常直接抛出，因为检查型异常是需要开发者手动处理（开发者会手动处理，为了编译通过）
                 if (!(exception instanceof RuntimeException) && (exception instanceof Exception)) {
                     return;
                 }
-                // directly throw if the exception appears in the signature
+                // directly throw if the exception appears in the signature 方法签名上的异常开发者也会手动处理（为了编译通过）
                 try {
                     Method method = invoker.getInterface().getMethod(RpcUtils.getMethodName(invocation), invocation.getParameterTypes());
                     Class<?>[] exceptionClasses = method.getExceptionTypes();

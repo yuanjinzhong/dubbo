@@ -76,6 +76,14 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
         this.proxyFactory = proxyFactory;
     }
 
+
+    /**
+     *  Exporter 会缓存起来
+     * @param invoker Service invoker
+     * @return
+     * @param <T>
+     * @throws RpcException
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> Exporter<T> export(final Invoker<T> invoker) throws RpcException {
@@ -87,6 +95,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
                 return exporter;
             }
         }
+        /*** important */
         final Runnable runnable = doExport(proxyFactory.getProxy(invoker, true), invoker.getInterface(), invoker.getUrl());
         exporter = new AbstractExporter<T>(invoker) {
             @Override
@@ -101,6 +110,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
                 }
             }
         };
+        /*** important */
         exporterMap.put(uri, exporter);
         return exporter;
     }

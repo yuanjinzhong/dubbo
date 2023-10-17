@@ -30,6 +30,9 @@ import java.util.List;
  * <p>
  * <a href="http://en.wikipedia.org/wiki/Directory_service">Directory Service</a>
  *
+ *
+ * <p>看内部包含的方法，可以认为是对invoker的包装(一个逻辑上的provider，物理上可能有多个实例)</p>
+ *
  * @see org.apache.dubbo.rpc.cluster.Cluster#join(Directory)
  */
 public interface Directory<T> extends Node {

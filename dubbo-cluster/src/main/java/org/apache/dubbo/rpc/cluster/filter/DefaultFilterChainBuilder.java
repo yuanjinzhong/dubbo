@@ -110,12 +110,12 @@ public class DefaultFilterChainBuilder implements FilterChainBuilder {
         } else {
             filters = ScopeModelUtil.getExtensionLoader(ClusterFilter.class, null).getActivateExtension(url, key, group);
         }
-
+        /**和上面一样 将{@link clusterFilter} 、和{@link ClusterInvoker} 包装成一个chain*/
         if (!CollectionUtils.isEmpty(filters)) {
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final ClusterFilter filter = filters.get(i);
                 final Invoker<T> next = last;
-                last = new CopyOfClusterFilterChainNode<>(originalInvoker, next, filter);
+                last = new CopyOfClusterFilterChainNode<>(originalInvoker, next, filter);//创建chain
             }
             return new ClusterCallbackRegistrationInvoker<>(originalInvoker, last, filters);
         }

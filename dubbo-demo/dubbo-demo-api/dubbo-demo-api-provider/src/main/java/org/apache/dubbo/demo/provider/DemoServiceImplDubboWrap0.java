@@ -21,7 +21,7 @@ import org.apache.dubbo.demo.provider.DemoServiceImpl;
 
 /**
  * javaasist生成的代理
- * DemoServiceImpl类的
+ * DemoServiceImpl类的, 对应代码 org.apache.dubbo.common.bytecode.Wrapper#getWrapper(java.lang.Class)
  */
 public class DemoServiceImplDubboWrap0 extends Wrapper implements ClassGenerator.DC {
     public static String[] pns;

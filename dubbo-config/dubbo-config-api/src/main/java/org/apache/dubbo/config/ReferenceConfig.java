@@ -615,13 +615,13 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
 
 
     /**
-     * \create a reference invoker
+     * \create a reference invoker，创建 普通invoker或者clusterInvoker
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void createInvoker() {
         if (urls.size() == 1) {
             URL curUrl = urls.get(0);
-            invoker = protocolSPI.refer(interfaceClass, curUrl);
+            invoker = protocolSPI.refer(interfaceClass, curUrl);//todo 这个protocolSPI 是 {@link InvokerCountWrapper}，protocol的层层包装，最后到了{@link RegistryProtocol}
             // registry url, mesh-enable and unloadClusterRelated is true, not need Cluster.
             if (!UrlUtils.isRegistry(curUrl) &&
                     !curUrl.getParameter(UNLOAD_CLUSTER_RELATED, false)) {

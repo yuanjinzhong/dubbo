@@ -1,8 +1,15 @@
 package org.apache.dubbo.demo.consumer;
 
+import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.rpc.model.ScopeModel;
 import org.apache.dubbo.rpc.model.ScopeModelUtil;
 
+/**
+ * 类似这种代码生成的： protocolSPI = getUrl().getApplicationModel().getExtensionLoader(Protocol.class).getAdaptiveExtension();
+ *
+ * 生成逻辑在这里：
+ * @see ExtensionLoader#createAdaptiveExtensionClass()
+ */
 public class Protocol$Adaptive implements org.apache.dubbo.rpc.Protocol {
     public org.apache.dubbo.rpc.Invoker refer(java.lang.Class arg0, org.apache.dubbo.common.URL arg1) throws org.apache.dubbo.rpc.RpcException {
         if (arg1 == null) throw new IllegalArgumentException("url == null");

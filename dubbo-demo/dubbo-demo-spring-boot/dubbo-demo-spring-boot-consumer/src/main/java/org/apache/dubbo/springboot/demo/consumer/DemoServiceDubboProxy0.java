@@ -16,31 +16,50 @@ import org.apache.dubbo.springboot.demo.DemoService;
  */
 public class DemoServiceDubboProxy0 implements ClassGenerator.DC, DemoService, EchoService, Destroyable {
     public static Method[] methods;
-    private InvocationHandler handler;
+    private InvocationHandler handler; // 这个实现类是：InvokerInvocationHandler
 
     public CompletableFuture sayHelloAsync(String string)  {
         Object[] objectArray = new Object[]{string};
-        Object object = this.handler.invoke(this, methods[0], objectArray);
+        Object object = null;
+        try {
+            object = this.handler.invoke(this, methods[0], objectArray);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
         return (CompletableFuture) object;
     }
 
     public String sayHello(String string) {
         Object[] objectArray = new Object[]{string};
-        Object object = this.handler.invoke(this, methods[1], objectArray);
+        Object object = null;
+        try {
+            object = this.handler.invoke(this, methods[1], objectArray);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
         return (String) object;
     }
 
     @Override
     public Object $echo(Object object) {
         Object[] objectArray = new Object[]{object};
-        Object object2 = this.handler.invoke(this, methods[2], objectArray);
+        Object object2 = null;
+        try {
+            object2 = this.handler.invoke(this, methods[2], objectArray);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
         return object2;
     }
 
     @Override
     public void $destroy() {
         Object[] objectArray = new Object[]{};
-        Object object = this.handler.invoke(this, methods[3], objectArray);
+        try {
+            Object object = this.handler.invoke(this, methods[3], objectArray);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public DemoServiceDubboProxy0() {

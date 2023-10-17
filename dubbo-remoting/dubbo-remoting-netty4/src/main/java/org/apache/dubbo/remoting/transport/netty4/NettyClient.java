@@ -138,7 +138,7 @@ public class NettyClient extends AbstractClient {
 
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
                 /***入栈&出栈日志记录*/
-                ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
+                //ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
                 ch.pipeline()//.addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug
                     .addLast("decoder", adapter.getDecoder())
                     .addLast("encoder", adapter.getEncoder())

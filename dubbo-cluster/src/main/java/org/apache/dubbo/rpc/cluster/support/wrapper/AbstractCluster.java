@@ -43,20 +43,20 @@ import static org.apache.dubbo.common.constants.CommonConstants.REFERENCE_FILTER
 public abstract class AbstractCluster implements Cluster {
 
     private <T> Invoker<T> buildClusterInterceptors(AbstractClusterInvoker<T> clusterInvoker) {
-        AbstractClusterInvoker<T> last = buildInterceptorInvoker(new ClusterFilterInvoker<>(clusterInvoker));
+        AbstractClusterInvoker<T> last = buildInterceptorInvoker(new ClusterFilterInvoker<>(clusterInvoker));//todo new ClusterFilterInvoker<>(clusterInvoker) 这个ClusterFilterInvoker就是 ClusterInvoker、ClusterFilter组成的链表了
 
         if (Boolean.parseBoolean(ConfigurationUtils.getProperty(clusterInvoker.getDirectory().getConsumerUrl().getScopeModel(), CLUSTER_INTERCEPTOR_COMPATIBLE_KEY, "false"))) {
             return build27xCompatibleClusterInterceptors(clusterInvoker, last);
         }
         return last;
     }
-
+    /**将{@link Directory}里面物理的invoker集合，包装成一个虚拟的invoker,由此可以在这个虚拟的invoker内部做负载均衡，各种容错处理 */
     @Override
     public <T> Invoker<T> join(Directory<T> directory, boolean buildFilterChain) throws RpcException {
         if (buildFilterChain) {
-            return buildClusterInterceptors(doJoin(directory));
+            return buildClusterInterceptors(doJoin(directory)); //todo  如果 需要 buildFilterChain 则 构建 链表（filter、invoker 包装成链表节点） 注意这里有个doJoin(directory)逻辑
         } else {
-            return doJoin(directory);
+            return doJoin(directory);  // todo 不需要拦截，则直接按各自策略处理 返回 一个虚拟的lnvoker
         }
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractCluster implements Cluster {
         List<InvocationInterceptorBuilder> builders = ScopeModelUtil.getApplicationModel(invoker.getUrl().getScopeModel()).getExtensionLoader(InvocationInterceptorBuilder.class).getActivateExtensions();
         if (CollectionUtils.isEmpty(builders)) {
             return invoker;
-        }
+        } // todo 这边拦截逻辑 dubbo没有提供实现
         return new InvocationInterceptorInvoker<>(invoker, builders);
     }
 

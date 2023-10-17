@@ -30,6 +30,12 @@ import org.apache.dubbo.rpc.model.ScopeModelUtil;
  * <a href="http://en.wikipedia.org/wiki/Computer_cluster">Cluster</a>
  * <a href="http://en.wikipedia.org/wiki/Fault-tolerant_system">Fault-Tolerant</a>
  *
+ * <p>Cluster将Directory中的多个Invoker伪装成一个 Invoker，对上层透明，伪装过程包含了容错逻辑，调用失败后，重试另一个；</p>
+ *
+ * <p>这表示一个集群，实现类有， 失效转移集群，快速失败集群，FailOver FailFast， FailSafe，FailBack</p>
+ *
+ * <a href="https://dubbo.apache.org/zh-cn/overview/mannual/java-sdk/advanced-features-and-usage/service/fault-tolerent-strategy/#%E7%89%B9%E6%80%A7%E8%AF%B4%E6%98%8E">dubbo 集群的说明：cluster</a>
+ *
  */
 @SPI(Cluster.DEFAULT)
 public interface Cluster {
@@ -38,7 +44,9 @@ public interface Cluster {
 
     /**
      * Merge the directory invokers to a virtual invoker.
-     *
+     * <p>
+     * <p>将多个物理invoker(directory就表示invoker集合)包装成一个虚拟的invoker</p>
+     * <p>
      * @param <T>
      * @param directory
      * @return cluster invoker

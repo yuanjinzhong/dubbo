@@ -357,6 +357,13 @@ public class AsyncRpcResult implements Result {
         } else {
             result.setValue(value);
         }
+        /**
+         *  如果future已经完成了，则默认值设置失败
+         *
+         *  如果还没完成，则设置默认值成功，则后续调用 get、join方法都会返回 这个默认值
+         *
+         *  显然这里没有异步任务，则永远返回默认值
+         */
         future.complete(result);
         return new AsyncRpcResult(future, invocation);
     }

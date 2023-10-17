@@ -421,7 +421,7 @@ public class DubboProtocol extends AbstractProtocol {
         checkDestroyed();
         optimizeSerialization(url);
 
-        // create rpc invoker.
+        // create rpc invoker.   invoker其实是对socketClient的包装
         DubboInvoker<T> invoker = new DubboInvoker<T>(serviceType, url, getClients(url), invokers);
         invokers.add(invoker);
 

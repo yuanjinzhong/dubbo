@@ -204,7 +204,8 @@ public class ReferenceBean<T> implements FactoryBean<T>,
      * @see ReferenceBeanManager#initReferenceBean(ReferenceBean)
      * @see DubboBeanDefinitionParser#configReferenceBean
      *
-     * todo 创建服务调用的代理对象
+     *   创建服务调用的代理对象,最终调用该方法:
+     *   <code>Proxy.getProxy(interfaces.toArray(new Class[0])).newInstance(new LazyTargetInvocationHandler(new DubboReferenceLazyInitTargetSource()));</code>
      */
     /**
      *  {@link ReferenceBean#afterPropertiesSet()} 这个方法先执行
@@ -365,6 +366,7 @@ public class ReferenceBean<T> implements FactoryBean<T>,
         }
 
         if (StringUtils.isEmpty(this.proxy) || CommonConstants.DEFAULT_PROXY.equalsIgnoreCase(this.proxy)) {
+            /**生成代理类参考：org.apache.dubbo.springboot.demo.consumer.DemoServiceDubboProxy0*/
             generateFromJavassistFirst(interfaces);
         }
 
@@ -424,6 +426,9 @@ public class ReferenceBean<T> implements FactoryBean<T>,
         }
     }
 
+    /**
+     *  调用方代理？？
+     */
     private class DubboReferenceLazyInitTargetSource implements LazyTargetSource {
         @Override
         public Object getTarget() throws Exception {

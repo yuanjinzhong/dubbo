@@ -55,6 +55,7 @@ public class LazyTargetInvocationHandler implements InvocationHandler {
         }
         if (method.getDeclaringClass().isInstance(target)) {
             try {
+                // 这个target 是 DemoServiceDubboProxy0， 参考里面的逻辑
                 return method.invoke(target, args);
             } catch (InvocationTargetException exception) {
                 Throwable targetException = exception.getTargetException();

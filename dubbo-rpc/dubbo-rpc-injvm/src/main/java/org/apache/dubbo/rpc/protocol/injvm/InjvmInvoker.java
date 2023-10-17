@@ -94,6 +94,12 @@ public class InjvmInvoker<T> extends AbstractInvoker<T> {
         }
     }
 
+    /**
+     * 由AbstractInvoker 这个抽象父类的模板方法调用
+     * @param invocation
+     * @return
+     * @throws Throwable
+     */
     @Override
     public Result doInvoke(Invocation invocation) throws Throwable {
         if (exporter == null) {

@@ -63,7 +63,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
             }
         }
     }
-
+    /**这个invoker 是provide端用的？*/
     @Override
     public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) {
         try {

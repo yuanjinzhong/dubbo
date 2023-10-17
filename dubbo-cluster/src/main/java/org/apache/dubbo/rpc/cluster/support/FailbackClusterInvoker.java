@@ -81,6 +81,14 @@ public class FailbackClusterInvoker<T> extends AbstractClusterInvoker<T> {
         failbackTasks = failbackTasksConfig;
     }
 
+    /**
+     * failback 策略下， 调用失败，添加定时任务去重试
+     * @param loadbalance
+     * @param invocation
+     * @param invokers
+     * @param lastInvoker
+     * @param consumerUrl
+     */
     private void addFailed(LoadBalance loadbalance, Invocation invocation, List<Invoker<T>> invokers, Invoker<T> lastInvoker, URL consumerUrl) {
         if (failTimer == null) {
             synchronized (this) {

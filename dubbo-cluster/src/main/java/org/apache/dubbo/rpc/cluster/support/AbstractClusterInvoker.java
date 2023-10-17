@@ -173,7 +173,7 @@ public abstract class AbstractClusterInvoker<T> implements ClusterInvoker<T> {
                 return stickyInvoker;
             }
         }
-
+        //todo 负载均衡
         Invoker<T> invoker = doSelect(loadbalance, invocation, invokers, selected);
 
         if (sticky) {
@@ -194,7 +194,7 @@ public abstract class AbstractClusterInvoker<T> implements ClusterInvoker<T> {
             checkShouldInvalidateInvoker(tInvoker);
             return tInvoker;
         }
-        Invoker<T> invoker = loadbalance.select(invokers, getUrl(), invocation);
+        Invoker<T> invoker = loadbalance.select(invokers, getUrl(), invocation);//todo 负载均衡
 
         //If the `invoker` is in the  `selected` or invoker is unavailable && availablecheck is true, reselect.
         boolean isSelected = selected != null && selected.contains(invoker);
@@ -335,7 +335,7 @@ public abstract class AbstractClusterInvoker<T> implements ClusterInvoker<T> {
         InvocationProfilerUtils.releaseDetailProfiler(invocation);
 
         checkInvokers(invokers, invocation);
-
+        /**负载均衡*/
         LoadBalance loadbalance = initLoadBalance(invokers, invocation);
         RpcUtils.attachInvocationIdIfAsync(getUrl(), invocation);
 

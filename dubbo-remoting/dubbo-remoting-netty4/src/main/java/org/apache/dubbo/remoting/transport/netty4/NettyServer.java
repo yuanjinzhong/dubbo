@@ -148,7 +148,7 @@ public class NettyServer extends AbstractServer {
                     NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyServer.this);
                     ch.pipeline().addLast("negotiation", new SslServerTlsHandler(getUrl()));
                     /***入栈&出栈日志记录*/
-                    ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
+                    //ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
                     ch.pipeline()
                         .addLast("decoder", adapter.getDecoder())
                         .addLast("encoder", adapter.getEncoder())
