@@ -21,9 +21,10 @@ spring:
 dubbo:
   application:
     name: ${spring.application.name}
+    serialize-check-status: DISABLE
   protocol:
     name: dubbo
-    port: -1 #表示 dubbo 自动扫描并使用可用端口（从20880开始递增），避免了端口冲突的问题。
+    port: 20899 #也可以用-1，表示 dubbo 自动扫描并使用可用端口（从20880开始递增），避免了端口冲突的问题。
   registry:
     id: zk-registry
     address: zookeeper://127.0.0.1:2181

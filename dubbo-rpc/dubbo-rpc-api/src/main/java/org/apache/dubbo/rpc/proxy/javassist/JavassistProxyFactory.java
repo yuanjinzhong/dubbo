@@ -42,6 +42,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
     private static final ErrorTypeAwareLogger logger = LoggerFactory.getErrorTypeAwareLogger(JavassistProxyFactory.class);
     private final JdkProxyFactory jdkProxyFactory = new JdkProxyFactory();
 
+    /**这个代理对象对象是consumer端使用，@DubboReference 引入的是这个代理对象，然后方法调用的时候，执行的是 这里的invoker方法(new InvokerInvocationHandler(invoker)) */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Invoker<T> invoker, Class<?>[] interfaces) {
@@ -63,7 +64,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
             }
         }
     }
-    /**这个invoker 是provide端用的？*/
+    /**这个invoker 是provide端用的, 当一个RPC调用发生的时候。服务端最终会调用这个{@link AbstractProxyInvoker#doInvoke(Object, String, Class[], Object[])} 方法*/
     @Override
     public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) {
         try {

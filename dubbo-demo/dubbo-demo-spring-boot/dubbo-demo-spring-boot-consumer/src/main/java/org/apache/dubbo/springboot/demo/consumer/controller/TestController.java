@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author: yuanjinzhong
+ * @author:
  * @date: 2023/10/17 17:54
  * @description:
  */
@@ -18,7 +18,13 @@ public class TestController {
 
     @GetMapping("/dubbo")
     public Object test(){
-        return   demoService.sayHello("world");
+        String world = null;
+        try {
+            world = demoService.sayHello("world");
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return world  ;
     }
 
 }

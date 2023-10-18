@@ -18,6 +18,7 @@
 package org.apache.dubbo.springboot.demo.consumer;
 
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.apache.dubbo.springboot.demo.DemoService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,8 +28,14 @@ import org.springframework.stereotype.Service;
 import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_NETWORK_IGNORED_INTERFACE;
 
 @SpringBootApplication
-//@EnableDubbo 可以不加，spring boot 自动配置 {@link org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration}
-public class ConsumerApplication99 {
+/**
+ * 可以不需要下面的{@link EnableDubbo}注解，前提是yml里面含有
+ *   scan:
+ *     base-packages: org.apache.dubbo.springboot.demo.provider
+ * 配置
+ *
+ * 因为DubboAutoConfiguration自动配置了
+ */public class ConsumerApplication99 {
 
     @DubboReference
     private DemoService demoService;
