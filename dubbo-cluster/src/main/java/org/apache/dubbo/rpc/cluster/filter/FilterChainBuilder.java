@@ -356,6 +356,7 @@ public interface FilterChainBuilder {
             try {
                 /** 至关重要的方法
                  *  各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法，从而发起RPC调用
+                 *  链表的递归调用
                  */
                 asyncResult = filter.invoke(nextNode, invocation);
                 if (!(asyncResult instanceof AsyncRpcResult)) {
