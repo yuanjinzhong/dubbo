@@ -992,7 +992,7 @@ public class ExtensionLoader<T> {
 
     private Map<String, Class<?>> getExtensionClasses() {
         Map<String, Class<?>> classes = cachedClasses.get();
-        if (classes == null) {
+        if (classes == null) {//朴实无华的双重校验
             synchronized (cachedClasses) {
                 classes = cachedClasses.get();
                 if (classes == null) {

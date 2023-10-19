@@ -1,1 +1,1 @@
-exception=org.apache.dubbo.springboot.demo.provider.filter.ExceptionFilter
+selfException=org.apache.dubbo.springboot.demo.provider.filter.ExceptionFilter
