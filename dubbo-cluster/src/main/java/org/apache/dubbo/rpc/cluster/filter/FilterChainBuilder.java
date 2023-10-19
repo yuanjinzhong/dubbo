@@ -347,7 +347,11 @@ public interface FilterChainBuilder {
          * <li>{@link nextNode}:真正的invoker,等于originalInvoker属性</li>
          * <li>{@link filter}: 从扩展点中加载的排好序的filter的最后一个（因为构建链表的时候，最后一个filter和真正的invoker 被包在最内层）</li>
          *
-         * <p><b>该方法最终达到的效果是: 各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法，从而发起RPC调用</b></p>
+         * <p><b>该方法最终达到的效果是: 各种{@link filter.invoke}方法先执行，
+         * filter.invoke执行完，再执行CopyOfFilterChainNode的invoke（递归调用）
+         * 在最后一个CopyOfFilterChainNode对象内部，调用filter.invoke的时候，传入的最后一个nextNode属性是真正的invoker,不是CopyOfFilterChainNode对象（不会再次递归）
+         *
+         * （最后一个nextNode通常就是dubboInvoker）执行真正的invoker的invoke方法，从而发起RPC调用</b></p>
          *
          */
         @Override
@@ -355,9 +359,10 @@ public interface FilterChainBuilder {
             Result asyncResult;
             try {
                 /** 至关重要的方法
-                 *  各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法，从而发起RPC调用
+                 *  各种{@link filter.invoke}方法先执行，再执行最后一个filter.invoke的时候，执行真正的invoker的invoke方法(非CopyOfFilterChainNode对象，所以不会再次递归)，从而发起RPC调用
+                 *  链表的递归调用
                  */
-                asyncResult = filter.invoke(nextNode, invocation);
+                asyncResult = filter.invoke(nextNode, invocation); // 最后一个nextNode是真实的invoker对象，不是CopyOfFilterChainNode对象，所以不会走到该方法，不会再进行递归调用（走的正经的invoker的invoker方法，比如dubboInvoker的invoke方法）
                 if (!(asyncResult instanceof AsyncRpcResult)) {
                     String msg = "The result of filter invocation must be AsyncRpcResult. (If you want to recreate a result, please use AsyncRpcResult.newDefaultAsyncResult.) " +
                         "Filter class: " + filter.getClass().getName() + ". Result class: " + asyncResult.getClass().getName() + ".";
