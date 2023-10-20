@@ -22,6 +22,8 @@ import org.apache.dubbo.common.utils.CollectionUtils;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.RpcException;
+import org.apache.dubbo.rpc.cluster.directory.AbstractDirectory;
+import org.apache.dubbo.rpc.cluster.router.state.BitList;
 
 import java.util.List;
 
@@ -47,6 +49,14 @@ public interface Directory<T> extends Node {
     /**
      * list invokers.
      * filtered by invocation
+     *
+     * 最终会通过RouterChain来过滤invoker集合：输入invoker集合，根据RouterRule(规则)过滤出合适的集合
+     *
+     * @see AbstractDirectory#list(Invocation)
+     * @see AbstractDirectory#doList(SingleRouterChain, BitList, Invocation)
+     *
+     * 调用该方法的地方：
+     * @see org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker#list(org.apache.dubbo.rpc.Invocation)
      *
      * @return invokers
      */

@@ -44,7 +44,9 @@ public interface Router extends Comparable<Router> {
     URL getUrl();
 
     /**
-     * Filter invokers with current routing rule and only return the invokers that comply with the rule.
+     * Filter invokers with current routing rule and only return the invokers that comply（遵守） with the rule.
+     *
+     * 删选出符合路由规则的invoker集合
      *
      * @param invokers   invoker list
      * @param url        refer url
@@ -59,6 +61,7 @@ public interface Router extends Comparable<Router> {
 
     /**
      * ** This method can return the state of whether routerChain needed to continue route. **
+     * 会多返回一个状态，表示是否需要继续路由下去
      * Filter invokers with current routing rule and only return the invokers that comply with the rule.
      *
      * @param invokers   invoker list

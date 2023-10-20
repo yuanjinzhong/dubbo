@@ -22,7 +22,7 @@ import org.apache.dubbo.common.extension.SPI;
 import static org.apache.dubbo.common.extension.ExtensionScope.MODULE;
 
 @SPI(value = "default", scope = MODULE)
-public interface GovernanceRuleRepository {
+public interface GovernanceRuleRepository { // Governance 治理，治理规则工厂
 
     String DEFAULT_GROUP = "dubbo";
 

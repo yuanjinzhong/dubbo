@@ -80,7 +80,7 @@ public abstract class AbstractCluster implements Cluster {
             } else {
                 ClusterInvoker<T> tmpInvoker = invoker;
                 for (FilterChainBuilder builder : builders) {
-                    tmpInvoker = builder.buildClusterInvokerChain(tmpInvoker, REFERENCE_FILTER_KEY, CommonConstants.CONSUMER);
+                    tmpInvoker = builder.buildClusterInvokerChain(tmpInvoker, REFERENCE_FILTER_KEY, CommonConstants.CONSUMER);// ClusterInvoker +Filter链表
                 }
                 filterInvoker = tmpInvoker;
             }

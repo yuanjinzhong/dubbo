@@ -40,6 +40,8 @@ public interface RouterFactory {
      * Create router.
      * Since 2.7.0, most of the time, we will not use @Adaptive feature, so it's kept only for compatibility.
      *
+     * todo 将 URl转换成 Router
+     *
      * @param url url
      * @return router instance
      */

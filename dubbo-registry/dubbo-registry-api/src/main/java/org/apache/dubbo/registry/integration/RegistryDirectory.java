@@ -361,7 +361,7 @@ public class RegistryDirectory<T> extends DynamicDirectory<T> {
         return mergedInvokers;
     }
 
-    /**
+    /** 将URl 转换成 Router
      * @param urls
      * @return null : no routers ,do nothing
      * else :routers list
