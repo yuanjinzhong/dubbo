@@ -68,6 +68,7 @@ public class InvokerInvocationHandler implements InvocationHandler {
         }
         RpcInvocation rpcInvocation = new RpcInvocation(serviceModel, method.getName(), invoker.getInterface().getName(), protocolServiceKey, method.getParameterTypes(), args);
 
+        //consumer发送请求，provider接收请求都是走这里， 只不过不同模式有设置不同的参数
         if (serviceModel instanceof ConsumerModel) {
             rpcInvocation.put(Constants.CONSUMER_MODEL, serviceModel);
             rpcInvocation.put(Constants.METHOD_MODEL, ((ConsumerModel) serviceModel).getMethodModel(method));

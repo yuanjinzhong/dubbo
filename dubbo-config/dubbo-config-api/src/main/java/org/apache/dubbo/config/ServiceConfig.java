@@ -154,6 +154,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
 
     /**
      * The exported services
+     *
+     * 暴露出去的服务，这时候的服务的表现形式是 {@link Invoker}
+     *
      */
     private final Map<RegisterTypeEnum, List<Exporter<?>>> exporters = new ConcurrentHashMap<>();
 
@@ -546,7 +549,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         map.keySet().removeIf(key -> StringUtils.isEmpty(key) || StringUtils.isEmpty(map.get(key)));
         // init serviceMetadata attachments
         serviceMetadata.getAttachments().putAll(map);
-
+        /**URL产生的地方*/
         URL url = buildUrl(protocolConfig, map);
 
         processServiceExecutor(url);
@@ -713,6 +716,12 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         }
     }
 
+    /**
+     * URL 产生的地方
+     * @param protocolConfig
+     * @param params
+     * @return
+     */
     private URL buildUrl(ProtocolConfig protocolConfig, Map<String, String> params) {
         String name = protocolConfig.getName();
         if (StringUtils.isEmpty(name)) {
