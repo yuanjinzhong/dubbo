@@ -134,12 +134,12 @@ public class NettyClient extends AbstractClient {
                 }
 
                 /***这边的channelHandle全是可以共享的*/
-                LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
+//                LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
 
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
                 /***入栈&出栈日志记录*/
                 //ch.pipeline().addLast(LOGGING_HANDLER);//为了测试
-                ch.pipeline()//.addLast("logging",new LoggingHandler(LogLevel.INFO))//for debug
+                ch.pipeline().addLast("logging",new LoggingHandler(LogLevel.DEBUG))//for debug
                     .addLast("decoder", adapter.getDecoder())
                     .addLast("encoder", adapter.getEncoder())
                     .addLast("client-idle-handler", new IdleStateHandler(heartbeatInterval, 0, 0, MILLISECONDS))
